@@ -8,7 +8,7 @@
         nav { position: sticky; top: 0; background: white; padding: 12px 30px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; z-index: 100; }
         nav a { margin-left: 20px; text-decoration: none; color: #2d6a4f; font-weight: 600; }
         header { text-align: center; padding: 50px 20px; }
-        .section { width: 95%; max-width: 1300px; margin: 40px auto; }
+        .section { width: 95%; max-width: 1400px; margin: 40px auto; }
         h2 { border-bottom: 2px solid #cde8d0; padding-bottom: 10px; color: #1b4332; }
         
         /* FILTERS */
@@ -16,27 +16,30 @@
         input, select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; flex-grow: 1; min-width: 150px; }
 
         /* CARDS */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: white; padding: 18px; border-radius: 10px; border: 1px solid #d8f3dc; transition: 0.3s; display: flex; flex-direction: column; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 10px; border: 1px solid #d8f3dc; transition: 0.3s; display: flex; flex-direction: column; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: #2d6a4f; }
-        .card h3 { margin: 0 0 10px 0; color: #2d6a4f; }
-        .card p { font-size: 0.85em; color: #555; flex-grow: 1; margin-bottom: 15px; min-height: 40px; }
+        .card h3 { margin: 0 0 10px 0; color: #2d6a4f; font-size: 1.2em; }
+        .card p.desc { font-size: 0.85em; color: #444; margin-bottom: 15px; line-height: 1.4; flex-grow: 1; }
         
+        .meta-info { font-size: 0.75em; color: #666; margin-bottom: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .meta-info span b { color: #1b4332; }
+
         .tag-row { display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap; }
-        .tag { font-size: 0.7em; padding: 3px 8px; border-radius: 12px; background: #e9ecef; font-weight: bold; }
+        .tag { font-size: 0.7em; padding: 3px 8px; border-radius: 12px; background: #e9ecef; font-weight: bold; text-transform: uppercase; }
         .tag.Easy { background: #d8f3dc; color: #2d6a4f; }
         .tag.Med { background: #fff3b0; color: #997b00; }
         .tag.Hard { background: #ffd7ba; color: #d9480f; }
-        .tag.Exp { background: #f8ad9d; color: #a4161a; }
+        .tag.Expert { background: #f8ad9d; color: #a4161a; }
         .tag.Type { background: #e0f2fe; color: #0369a1; }
 
-        .card-links { display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 10px; }
-        .card-links a { font-size: 0.8em; text-decoration: none; color: #2d6a4f; font-weight: bold; padding: 5px 10px; border: 1px solid #2d6a4f; border-radius: 4px; transition: 0.2s; flex: 1; text-align: center; }
+        .card-links { display: flex; gap: 8px; border-top: 1px solid #eee; padding-top: 15px; }
+        .card-links a { font-size: 0.75em; text-decoration: none; color: #2d6a4f; font-weight: bold; padding: 6px; border: 1px solid #2d6a4f; border-radius: 4px; transition: 0.2s; flex: 1; text-align: center; }
         .card-links a:hover { background: #2d6a4f; color: white; }
 
         /* TABLE */
         .table-container { overflow-x: auto; background: white; border-radius: 8px; border: 1px solid #ddd; margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
         th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
         th { background: #2d6a4f; color: white; cursor: pointer; white-space: nowrap; }
         tr:hover { background: #f1f8e9; }
@@ -50,45 +53,42 @@
     <div><b>GNN-CB</b></div>
     <div>
         <a href="#tasks">Competitions</a>
-        <a href="#leaderboard">Human Leaderboard</a>
+        <a href="#leaderboard">Leaderboard</a>
     </div>
 </nav>
 
 <header>
     <h1>GNN Coding Benchmark</h1>
-    <p>Exploring Graph Neural Network architectures through competitive human performance.</p>
+    <p>Comprehensive overview of 18 GNN competitions and human performance baselines.</p>
 </header>
 
 <div class="section" id="tasks">
-    <h2>🧠 Benchmark Tasks</h2>
+    <h2>🧠 Competition Explorer</h2>
     
     <div class="controls">
-        <input type="text" id="search" placeholder="Search tasks..." onkeyup="filter()">
+        <input type="text" id="search" placeholder="Search by name, domain, or dataset..." onkeyup="filter()">
         
         <select id="diff" onchange="filter()">
             <option value="all">All Difficulties</option>
             <option value="Easy">Easy</option>
             <option value="Med">Medium</option>
             <option value="Hard">Hard</option>
-            <option value="Exp">Expert</option>
+            <option value="Expert">Expert</option>
         </select>
 
         <select id="typeFilter" onchange="filter()">
-            <option value="all">All Graph Types</option>
+            <option value="all">All Categories</option>
             <option value="Homo">Homogeneous</option>
             <option value="Hetero">Heterogeneous</option>
             <option value="Spatial">Spatial</option>
-            <option value="Temporal">Temporal</option>
+            <option value="Temp">Temporal</option>
             <option value="Hier">Hierarchical</option>
             <option value="Gen">Generative</option>
-            <option value="Node">Node-level</option>
-            <option value="Edge">Edge-level</option>
+            <option value="Molecular">Molecular</option>
         </select>
     </div>
 
-    <div class="grid" id="grid">
-        <!-- JS generates cards -->
-    </div>
+    <div class="grid" id="grid"></div>
 </div>
 
 <div class="section" id="leaderboard">
@@ -108,9 +108,7 @@
                     <th onclick="sortTable(8)">Median</th>
                 </tr>
             </thead>
-            <tbody id="table-body">
-                <!-- JS generates rows -->
-            </tbody>
+            <tbody id="table-body"></tbody>
         </table>
     </div>
 </div>
@@ -119,24 +117,24 @@
 
 <script>
 const competitions = [
-    { id: "C01", name: "PROVEN-GNN", diff: "Med", type: "Node", n: 17, avg: 0.7915, std: 0.1011, high: 0.9001, low: 0.4351, med: 0.8332, desc: "Graph classification on code graphs", repo: "https://github.com/abdksm/PROVEN-GNN/" },
-    { id: "C02", name: "CGCC", diff: "Hard", type: "Node", n: 17, avg: 0.3825, std: 0.0859, high: 0.5368, low: 0.2051, med: 0.3947, desc: "City street-network layouts", repo: "https://github.com/Murad-Hossen/CGCC" },
-    { id: "C03", name: "Real Or Fake!", diff: "Easy", type: "Hier", n: 15, avg: 0.9447, std: 0.0525, high: 0.9803, low: 0.7666, med: 0.9582, desc: "Binary Graph Classification for Fake News", repo: "https://github.com/TugaAhmed/Real_Or_Fake/tree/main" },
-    { id: "C04", name: "GLIMPS-GNN", diff: "Hard", type: "Edge", n: 16, avg: 0.3890, std: 0.0940, high: 0.6000, low: 0.2800, med: 0.3600, desc: "cfRNA preeclampsia classification", repo: "https://github.com/Mubarraqqq/gnn-challenge" },
-    { id: "C05", name: "GNN_BACE_Challenge", diff: "Med", type: "Hier", n: 14, avg: 0.4958, std: 0.0884, high: 0.6741, low: 0.3909, med: 0.5163, desc: "Molecular graph classification (BACE-1)", repo: "https://github.com/hadilaff/GNN_BACE_Challenge" },
-    { id: "C06", name: "DiaGraph", diff: "Hard", type: "Hetero", n: 15, avg: 0.5703, std: 0.1254, high: 0.8224, low: 0.4769, med: 0.5011, desc: "Node classification on patient similarity graph", repo: "#" },
-    { id: "C07", name: "GRAPE", diff: "Med", type: "Spatial", n: 16, avg: 0.7067, std: 0.1308, high: 0.8295, low: 0.4000, med: 0.7619, desc: "Diabetic retinopathy from retinal vessel graphs", repo: "https://github.com/Muhammad0isah/GRAPE" },
-    { id: "C08", name: "Liar Nodes", diff: "Exp", type: "Temporal", n: 20, avg: 9.5, std: 30, high: 28, low: 14, med: 8, desc: "Spatio-temporal traffic speed prediction", repo: "#" },
-    { id: "C09", name: "NetLinkArena", diff: "Med", type: "Spatial", n: 17, avg: 3.5, std: 16, high: 18, low: 4, med: 2, desc: "Point cloud classification", repo: "https://github.com/ignatiusbalayo/NetLinkArena" },
-    { id: "C10", name: "PARK-GNN Challenge", diff: "Hard", type: "Spatial", n: 14, avg: 0.7726, std: 0.1160, high: 0.9328, low: 0.5477, med: 0.7832, desc: "Parkinson's detection from acoustic voice", repo: "https://github.com/AiIkram/gnn-parkinsons-challenge" },
-    { id: "C11", name: "GNN-CoRA", diff: "Med", type: "Hier", n: 14, avg: 55.09, std: 19.63, high: 74.20, low: 15.30, med: 63.75, desc: "Node classification on citation network", repo: "https://github.com/tasneem-mselim/GNN_CoRA" },
-    { id: "C12", name: "GraphFMD", diff: "Med", type: "Temporal", n: 18, avg: 0.6694, std: 0.1145, high: 0.8063, low: 0.4030, med: 0.7170, desc: "Predict illicit vs licit Bitcoin transactions", repo: "https://github.com/faranbutt/GraphFMD" },
-    { id: "C13", name: "gnn-topology-ablation", diff: "Exp", type: "Gen", n: 16, avg: 10.5, std: 34, high: 28, low: 18, med: 4, desc: "Meta-learning for node classification", repo: "#" },
-    { id: "C14", name: "brain-age-gnn-oasis3", diff: "Easy", type: "Gen", n: 14, avg: 6.53, std: 1.47, high: 10.64, low: 4.99, med: 6.21, desc: "Graph regression for age prediction", repo: "https://github.com/bjayadikary/brain-age-gnn-oasis3" },
-    { id: "C15", name: "OctoNode Cup", diff: "Med", type: "Node", n: 15, avg: 0.6718, std: 0.1513, high: 0.7933, low: 0.2113, med: 0.7296, desc: "Predict Web vs ML developers", repo: "https://github.com/El-Ikram/OctoNode_Cup" },
-    { id: "C16", name: "Graph4ASD", diff: "Med", type: "Edge", n: 14, avg: 0.5125, std: 0.0822, high: 0.6269, low: 0.3891, med: 0.5431, desc: "Brain connectivity classification", repo: "https://github.com/RosePY/Graph4ASD-Challenge" },
-    { id: "C17", name: "Mix2Print", diff: "Hard", type: "Hetero", n: 13, avg: 6.2, std: 24, high: 22, low: 14, med: 4, desc: "Knowledge graph completion", repo: "https://github.com/VinitSingroha/Mix2Print" },
-    { id: "C18", name: "The THInC Challenge", diff: "Hard", type: "Temporal", n: 14, avg: 0.4895, std: 0.0562, high: 0.5652, low: 0.3543, med: 0.4981, desc: "Cell type classification", repo: "https://github.com/emmakowu3579-ui/inductive-class-challenge" }
+    { id: "C01", name: "PROVEN-GNN", diff: "Med", cat: "Hetero", nodes: "260.4K", edges: "1716K", feat: "527", domain: "Cybersecurity", metric: "Macro-F1", dataset: "DiverseVul", desc: "Graph classification on graph representations of source code", repo: "https://github.com/abdksm/PROVEN-GNN/", n_human: 17, avg: 0.7915, std: 0.1011, high: 0.9001, low: 0.4351, med: 0.8332, l_url: "https://abdksm.github.io/PROVEN-GNN/docs/leaderboard.html" },
+    { id: "C02", name: "CGCC", diff: "Hard", cat: "Homo", nodes: "108", edges: "156", feat: "3", domain: "Urban", metric: "Macro-F1", dataset: "OpenStreetMap", desc: "Graph classification of city street-network layouts", repo: "https://github.com/Murad-Hossen/CGCC", n_human: 17, avg: 0.3825, std: 0.0859, high: 0.5368, low: 0.2051, med: 0.3947, l_url: "https://murad-hossen.github.io/CGCC/leaderboard.html" },
+    { id: "C03", name: "Real Or Fake!", diff: "Easy", cat: "Hier", nodes: "314K", edges: "308K", feat: "1078", domain: "Social", metric: "Binary F1", dataset: "GossipCop", desc: "Binary Graph Classification For Fake News Detection", repo: "https://github.com/TugaAhmed/Real_Or_Fake/tree/main", n_human: 15, avg: 0.9447, std: 0.0525, high: 0.9803, low: 0.7666, med: 0.9582, l_url: "https://tugaahmed.github.io/Real_Or_Fake/leaderboard.html" },
+    { id: "C04", name: "GLIMPS-GNN", diff: "Hard", cat: "Hetero", nodes: "320", edges: "3200", feat: "6650", domain: "Biomedical", metric: "F1 score", dataset: "GEO: GSE192902", desc: "Inductive cfRNA -> placenta preeclampsia classification", repo: "https://github.com/Mubarraqqq/gnn-challenge", n_human: 16, avg: 0.3890, std: 0.0940, high: 0.6000, low: 0.2800, med: 0.3600, l_url: "https://mubarraqqq.github.io/gnn-challenge/leaderboard.html" },
+    { id: "C05", name: "GNN_BACE_Challenge", diff: "Med", cat: "Molecular", nodes: "32", edges: "34", feat: "8", domain: "Medical", metric: "Macro-F1", dataset: "BACE", desc: "Molecular graph classification for BACE-1 inhibition prediction", repo: "https://github.com/hadilaff/GNN_BACE_Challenge", n_human: 14, avg: 0.4958, std: 0.0884, high: 0.6741, low: 0.3909, med: 0.5163, l_url: "https://hadilaff.github.io/GNN_BACE_Challenge/leaderboard.html" },
+    { id: "C06", name: "DiaGraph", diff: "Hard", cat: "Homo", nodes: "96.1K", edges: "1224K", feat: "12", domain: "Medical", metric: "Macro-F1", dataset: "Kaggle Diabetes", desc: "Binary node classification for diabetes prediction on a noisy patient similarity graph", repo: "#", n_human: 15, avg: 0.5703, std: 0.1254, high: 0.8224, low: 0.4769, med: 0.5011, l_url: "#" },
+    { id: "C07", name: "GRAPE", diff: "Med", cat: "Spatial", nodes: "252", edges: "846", feat: "4", domain: "Medical", metric: "Macro-F1", dataset: "DRIVE, STARE", desc: "Diabetic retinopathy detection from retinal vessel graphs", repo: "https://github.com/Muhammad0isah/GRAPE", n_human: 16, avg: 0.7067, std: 0.1308, high: 0.8295, low: 0.4000, med: 0.7619, l_url: "https://muhammad0isah.github.io/GRAPE/leaderboard.html" },
+    { id: "C08", name: "Liar Nodes", diff: "Expert", cat: "Temp", nodes: "207", edges: "1.5K", feat: "2", domain: "Transport", metric: "MAE", dataset: "METR-LA", desc: "Spatio-temporal GNN for traffic speed prediction", repo: "#", n_human: 20, avg: 9.5, std: 30, high: 28, low: 14, med: 8, l_url: "#" },
+    { id: "C09", name: "GraphFMD", diff: "Med", cat: "Temp", nodes: "25.5K", edges: "--", feat: "165", domain: "Finance", metric: "Macro-F1", dataset: "Elliptic", desc: "Temporal inductive node classification: Bitcoin transactions", repo: "https://github.com/faranbutt/GraphFMD", n_human: 18, avg: 0.6694, std: 0.1145, high: 0.8063, low: 0.4030, med: 0.7170, l_url: "https://faranbutt.github.io/GraphFMD/leaderboard.html" },
+    { id: "C10", name: "NetLinkArena", diff: "Med", cat: "Spatial", nodes: "1024", edges: "3K", feat: "3", domain: "Vision", metric: "OA", dataset: "ModelNet40", desc: "Point cloud classification with GNN", repo: "https://github.com/ignatiusbalayo/NetLinkArena", n_human: 17, avg: 3.5, std: 16, high: 18, low: 4, med: 2, l_url: "https://ignatiusbalayo.github.io/NetLinkArena/leaderboard.html" },
+    { id: "C11", name: "PARK-GNN Challenge", diff: "Hard", cat: "Homo", nodes: "195", edges: "~1K", feat: "22", domain: "Medical", metric: "Macro-F1", dataset: "UCI Parkinson", desc: "Node classification for Parkinson's detection from acoustic voice", repo: "https://github.com/AiIkram/gnn-parkinsons-challenge", n_human: 14, avg: 0.7726, std: 0.1160, high: 0.9328, low: 0.5477, med: 0.7832, l_url: "https://aiikram.github.io/gnn-parkinsons-challenge/leaderboard.html" },
+    { id: "C12", name: "GNN-CoRA", diff: "Med", cat: "Homo", nodes: "2,708", edges: "5,429", feat: "1433", domain: "Academic", metric: "Accuracy", dataset: "Cora", desc: "Node classification on citation network", repo: "https://github.com/tasneem-mselim/GNN_CoRA", n_human: 14, avg: 55.09, std: 19.63, high: 74.20, low: 15.30, med: 63.75, l_url: "https://tasneem-mselim.github.io/GNN_CoRA/leaderboard.html" },
+    { id: "C13", name: "gnn-topology-ablation", diff: "Expert", cat: "Gen", nodes: "19K", edges: "64K", feat: "500", domain: "Academic", metric: "Accuracy", dataset: "ogbn-arxiv", desc: "Meta-learning GNN for few-shot node classification", repo: "#", n_human: 16, avg: 10.5, std: 34, high: 28, low: 18, med: 4, l_url: "#" },
+    { id: "C14", name: "brain-age-gnn-oasis3", diff: "Easy", cat: "Homo", nodes: "68", edges: "~1.1K", feat: "2", domain: "Medical", metric: "MAE", dataset: "OASIS-3", desc: "Graph regression for age prediction from brain connectomes", repo: "https://github.com/bjayadikary/brain-age-gnn-oasis3", n_human: 14, avg: 6.53, std: 1.47, high: 10.64, low: 4.99, med: 6.21, l_url: "https://bjayadikary.github.io/brain-age-gnn-oasis3/leaderboard.html" },
+    { id: "C15", name: "OctoNode Cup", diff: "Med", cat: "Homo", nodes: "37.7K", edges: "289K", feat: "128", domain: "Social", metric: "Macro-F1", dataset: "GitHub Social", desc: "Node classification to predict Web vs ML developers", repo: "https://github.com/El-Ikram/OctoNode_Cup", n_human: 15, avg: 0.6718, std: 0.1513, high: 0.7933, low: 0.2113, med: 0.7296, l_url: "https://el-ikram.github.io/OctoNode_Cup/leaderboard.html" },
+    { id: "C16", name: "Graph4ASD", diff: "Med", cat: "Homo", nodes: "200", edges: "19.9K", feat: "1", domain: "Neuroimaging", metric: "Macro-F1", dataset: "ABIDE", desc: "Binary classification of brain connectivity graphs (ASD vs. TC)", repo: "https://github.com/RosePY/Graph4ASD-Challenge", n_human: 14, avg: 0.5125, std: 0.0822, high: 0.6269, low: 0.3891, med: 0.5431, l_url: "https://rosepy.github.io/Graph4ASD-Challenge/leaderboard.html" },
+    { id: "C17", name: "Mix2Print", diff: "Hard", cat: "Homo", nodes: "15K", edges: "143K", feat: "200", domain: "KG", metric: "MRR", dataset: "WN18RR", desc: "Knowledge graph completion via GNN scoring", repo: "https://github.com/VinitSingroha/Mix2Print", n_human: 13, avg: 6.2, std: 24, high: 22, low: 14, med: 4, l_url: "https://vinitsingroha.github.io/Mix2Print/leaderboard.html" },
+    { id: "C18", name: "The THInC Challenge", diff: "Hard", cat: "Spatial", nodes: "30", edges: "148", feat: "4", domain: "Biomedical", metric: "Macro-F1", dataset: "NuCLS", desc: "Inductive GNN for cell type classification", repo: "https://github.com/emmakowu3579-ui/inductive-class-challenge", n_human: 14, avg: 0.4895, std: 0.0562, high: 0.5652, low: 0.3543, med: 0.4981, l_url: "https://emmakowu3579-ui.github.io/inductive-class-challenge/leaderboard.html" }
 ];
 
 function init() {
@@ -144,34 +142,40 @@ function init() {
     const tableBody = document.getElementById('table-body');
     
     competitions.forEach(comp => {
-        // Build Cards
         const card = document.createElement('div');
         card.className = 'card';
-        card.dataset.name = comp.name.toLowerCase();
+        card.dataset.name = (comp.name + comp.domain + comp.dataset).toLowerCase();
         card.dataset.diff = comp.diff;
-        card.dataset.type = comp.type;
+        card.dataset.cat = comp.cat;
         card.innerHTML = `
-            <h3>${comp.name}</h3>
             <div class="tag-row">
                 <span class="tag ${comp.diff}">${comp.diff}</span>
-                <span class="tag Type">${comp.type}</span>
+                <span class="tag Type">${comp.cat}</span>
             </div>
-            <p>${comp.desc}</p>
+            <h3>${comp.name}</h3>
+            <p class="desc">${comp.desc}</p>
+            <div class="meta-info">
+                <span><b>Nodes:</b> ${comp.nodes}</span>
+                <span><b>Edges:</b> ${comp.edges}</span>
+                <span><b>Metric:</b> ${comp.metric}</span>
+                <span><b>Domain:</b> ${comp.domain}</span>
+            </div>
+            <div class="meta-info" style="margin-top:-10px;">
+                <span style="grid-column: span 2;"><b>Dataset:</b> ${comp.dataset}</span>
+            </div>
             <div class="card-links">
-                <a href="${comp.repo}" target="_blank">Repo</a>
-                <a href="#row-${comp.id}">Leaderboard</a>
+                <a href="${comp.repo}" target="_blank">Repository</a>
+                <a href="${comp.l_url}" target="_blank">Leaderboard</a>
             </div>
         `;
         grid.appendChild(card);
 
-        // Build Table Rows
         const row = document.createElement('tr');
-        row.id = `row-${comp.id}`;
         row.innerHTML = `
             <td>${comp.id}</td>
             <td><b>${comp.name}</b></td>
             <td><span class="tag ${comp.diff}">${comp.diff}</span></td>
-            <td>${comp.n}</td>
+            <td>${comp.n_human}</td>
             <td>${comp.avg}</td>
             <td>${comp.std}</td>
             <td>${comp.high}</td>
@@ -185,13 +189,13 @@ function init() {
 function filter() {
     const text = document.getElementById('search').value.toLowerCase();
     const difficulty = document.getElementById('diff').value;
-    const type = document.getElementById('typeFilter').value;
+    const cat = document.getElementById('typeFilter').value;
     
     document.querySelectorAll('.card').forEach(card => {
         const matchesText = card.dataset.name.includes(text);
         const matchesDiff = difficulty === 'all' || card.dataset.diff === difficulty;
-        const matchesType = type === 'all' || card.dataset.type === type;
-        card.style.display = (matchesText && matchesDiff && matchesType) ? 'flex' : 'none';
+        const matchesCat = cat === 'all' || card.dataset.cat === cat;
+        card.style.display = (matchesText && matchesDiff && matchesCat) ? 'flex' : 'none';
     });
 }
 
@@ -203,7 +207,7 @@ function sortTable(n) {
     rows.sort((a, b) => {
         let valA = a.cells[n].innerText;
         let valB = b.cells[n].innerText;
-        if(!isNaN(parseFloat(valA))) {
+        if(!isNaN(parseFloat(valA.replace(/[%,~,K]/g, '')))) {
             return isAsc ? parseFloat(valA) - parseFloat(valB) : parseFloat(valB) - parseFloat(valA);
         }
         return isAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
