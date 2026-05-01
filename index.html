@@ -2,108 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>GNN Coding Benchmark</title>
+    <title>GNN Coding Benchmark - Human Leaderboard</title>
     <style>
         body { margin: 0; font-family: "Segoe UI", sans-serif; background: #f4fff6; color: #111; scroll-behavior: smooth; }
         nav { position: sticky; top: 0; background: white; padding: 12px 30px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; z-index: 100; }
         nav a { margin-left: 20px; text-decoration: none; color: #2d6a4f; font-weight: 600; }
-        header { text-align: center; padding: 60px 20px; }
-        .section { width: 95%; max-width: 1200px; margin: 40px auto; }
+        header { text-align: center; padding: 40px 20px; }
+        .section { width: 98%; max-width: 1400px; margin: 20px auto; }
         h2 { border-bottom: 2px solid #cde8d0; padding-bottom: 10px; color: #1b4332; }
         
-        /* FILTERS */
         .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: white; padding: 15px; border-radius: 8px; border: 1px solid #d8f3dc; }
         input, select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; flex-grow: 1; min-width: 150px; }
 
-        /* CARDS */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: white; padding: 18px; border-radius: 10px; border: 1px solid #d8f3dc; transition: 0.3s; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: #2d6a4f; }
-        .card h3 { margin: 0 0 10px 0; color: #2d6a4f; cursor: pointer; }
-        .card p { font-size: 0.85em; color: #555; flex-grow: 1; margin-bottom: 15px; }
-        
-        .tag-row { display: flex; gap: 5px; margin-bottom: 15px; }
-        .tag { font-size: 0.7em; padding: 3px 8px; border-radius: 12px; background: #e9ecef; font-weight: bold; }
+        .table-container { overflow-x: auto; background: white; border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+        th, td { padding: 12px 15px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: #2d6a4f; color: white; cursor: pointer; white-space: nowrap; position: sticky; top: 0; }
+        tr:hover { background: #f1f8e9; }
+
+        .tag { font-size: 0.75em; padding: 2px 6px; border-radius: 4px; font-weight: bold; background: #e9ecef; }
         .tag.Easy { background: #d8f3dc; color: #2d6a4f; }
         .tag.Med { background: #fff3b0; color: #997b00; }
         .tag.Hard { background: #ffd7ba; color: #d9480f; }
-        .tag.Expert { background: #f8ad9d; color: #a4161a; }
+        .tag.Exp { background: #f8ad9d; color: #a4161a; }
 
-        .card-links { display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 10px; }
-        .card-links a { font-size: 0.8em; text-decoration: none; color: #2d6a4f; font-weight: bold; padding: 5px 10px; border: 1px solid #2d6a4f; border-radius: 4px; transition: 0.2s; }
-        .card-links a:hover { background: #2d6a4f; color: white; }
-
-        /* TABLE */
-        .table-container { overflow-x: auto; background: white; border-radius: 8px; border: 1px solid #ddd; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
-        th { background: #f8f9fa; color: #2d6a4f; cursor: pointer; white-space: nowrap; }
-        tr:hover { background: #f1f8e9; }
-
-        /* MODAL */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
-        .modal-content { background: white; width: 90%; max-width: 500px; margin: 10% auto; padding: 30px; border-radius: 15px; position: relative; }
-        .close { position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer; }
-        
-        footer { text-align: center; padding: 40px; color: #666; font-size: 0.9em; }
+        footer { text-align: center; padding: 40px; color: #666; font-size: 0.8em; }
     </style>
 </head>
 <body>
 
 <nav>
     <div><b>GNN-CB</b></div>
-    <div>
-        <a href="#tasks">Competitions</a>
-        <a href="#leaderboard">Detailed Leaderboard</a>
-    </div>
+    <div><a href="#leaderboard">Human Leaderboard</a></div>
 </nav>
 
 <header>
     <h1>GNN Coding Benchmark</h1>
-    <p>Standardized evaluation of human intelligence across 18 graph reasoning tasks.</p>
+    <p>Official Human Performance Results from Table 4</p>
 </header>
 
-<div class="section" id="tasks">
-    <h2>🔍 Filter Competitions</h2>
-    
+<div class="section" id="leaderboard">
+    <h2>🏆 Human Leaderboard</h2>
     <div class="controls">
-        <input type="text" id="search" placeholder="Search by name, domain, or dataset..." onkeyup="filter()">
-        
-        <select id="cat" onchange="filter()">
-            <option value="all">All Graph Categories</option>
-            <option value="Homo">Homo</option>
-            <option value="Hetero">Hetero</option>
-            <option value="Temp">Temporal</option>
-            <option value="Spatial">Spatial</option>
-            <option value="Hier">Hierarchical</option>
-            <option value="Molecular">Molecular</option>
-            <option value="Gen">Meta/Generative</option>
-        </select>
-
-        <select id="diff" onchange="filter()">
+        <input type="text" id="search" placeholder="Search competitions..." onkeyup="filterTable()">
+        <select id="diffFilter" onchange="filterTable()">
             <option value="all">All Difficulties</option>
             <option value="Easy">Easy</option>
             <option value="Med">Medium</option>
             <option value="Hard">Hard</option>
-            <option value="Expert">Expert</option>
+            <option value="Exp">Expert</option>
         </select>
     </div>
 
-    <div class="grid" id="grid"></div>
-</div>
-
-<div class="section" id="leaderboard">
-    <h2>🏆 Results & Leaderboard</h2>
     <div class="table-container">
         <table id="mainTable">
             <thead>
                 <tr>
-                    <th onclick="sortTable(0)">ID</th>
+                    <th onclick="sortTable(0)">#</th>
                     <th onclick="sortTable(1)">Competition</th>
-                    <th onclick="sortTable(2)">Metric Type</th>
-                    <th onclick="sortTable(3)">Difficulty</th>
-                    <th onclick="sortTable(4)">High Score</th>
-                    <th onclick="sortTable(5)">Avg Score</th>
+                    <th onclick="sortTable(2)">Diff.</th>
+                    <th onclick="sortTable(3)">N</th>
+                    <th onclick="sortTable(4)">AVG</th>
+                    <th onclick="sortTable(5)">STD</th>
+                    <th onclick="sortTable(6)">High</th>
+                    <th onclick="sortTable(7)">Low</th>
+                    <th onclick="sortTable(8)">Median</th>
                 </tr>
             </thead>
             <tbody id="table-body"></tbody>
@@ -111,107 +74,60 @@
     </div>
 </div>
 
-<div class="modal" id="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">×</span>
-        <h2 id="m-title" style="color:#2d6a4f"></h2>
-        <hr>
-        <p><b>Domain:</b> <span id="m-domain"></span></p>
-        <p><b>Task:</b> <span id="m-desc"></span></p>
-        <p><b>Dataset:</b> <span id="m-data"></span></p>
-        <p><b>Primary Metric:</b> <span id="m-metric"></span></p>
-    </div>
-</div>
-
 <footer>Basira Lab • GNN Benchmark 2026</footer>
 
 <script>
-// Data normalized: All percentages (e.g. 74.2) converted to decimals (0.742) for consistent sorting
 const competitions = [
-    { id: "C01", name: "PROVEN-GNN", cat: "Hetero", diff: "Med", high: 0.900, avg: 0.791, domain: "Cybersecurity", desc: "Graph classification on code graphs", data: "DiverseVul", metric: "Macro-F1", repo: "https://github.com/abdksm/PROVEN-GNN/" },
-    { id: "C02", name: "CGCC", cat: "Homo", diff: "Hard", high: 0.536, avg: 0.382, domain: "Urban", desc: "City street-networks", data: "OpenStreetMap", metric: "Macro-F1", repo: "https://github.com/Murad-Hossen/CGCC" },
-    { id: "C03", name: "Real Or Fake!", cat: "Hier", diff: "Easy", high: 0.980, avg: 0.944, domain: "Social", desc: "Fake News Detection", data: "GossipCop", metric: "Binary F1", repo: "https://github.com/TugaAhmed/Real_Or_Fake/tree/main" },
-    { id: "C04", name: "GLIMPS-GNN", cat: "Hetero", diff: "Hard", high: 0.600, avg: 0.389, domain: "Biomedical", desc: "Placenta preeclampsia classification", data: "GEO Data", metric: "F1 score", repo: "https://github.com/Mubarraqqq/gnn-challenge" },
-    { id: "C05", name: "GNN_BACE", cat: "Molecular", diff: "Med", high: 0.674, avg: 0.495, domain: "Medical", desc: "BACE-1 inhibition prediction", data: "MoleculeNet", metric: "Macro-F1", repo: "https://github.com/hadilaff/GNN_BACE_Challenge" },
-    { id: "C06", name: "DiaGraph", cat: "Homo", diff: "Hard", high: 0.822, avg: 0.570, domain: "Medical", desc: "Diabetes prediction on noisy graphs", data: "Kaggle", metric: "Macro-F1", repo: "#" },
-    { id: "C07", name: "GRAPE", cat: "Spatial", diff: "Med", high: 0.829, avg: 0.706, domain: "Medical", desc: "Retinal vessel graph detection", data: "DRIVE/STARE", metric: "Macro-F1", repo: "https://github.com/Muhammad0isah/GRAPE" },
-    { id: "C08", name: "Liar Nodes", cat: "Temp", diff: "Expert", high: 28.0, avg: 9.5, domain: "Transport", desc: "Traffic speed prediction", data: "METR-LA", metric: "MAE (Lower is Better)", repo: "#" },
-    { id: "C09", name: "GraphFMD", cat: "Temp", diff: "Med", high: 0.806, avg: 0.669, domain: "Finance", desc: "Bitcoin transaction classification", data: "Elliptic", metric: "Macro-F1", repo: "https://github.com/faranbutt/GraphFMD" },
-    { id: "C10", name: "NetLinkArena", cat: "Spatial", diff: "Med", high: 18.0, avg: 3.5, domain: "Vision", desc: "Point cloud classification", data: "ModelNet40", metric: "OA (Standardized)", repo: "https://github.com/ignatiusbalayo/NetLinkArena" },
-    { id: "C11", name: "PARK-GNN", cat: "Homo", diff: "Hard", high: 0.932, avg: 0.772, domain: "Medical", desc: "Parkinson's Voice measurements", data: "UCI", metric: "Macro-F1", repo: "https://github.com/AiIkram/gnn-parkinsons-challenge" },
-    { id: "C12", name: "GNN-CoRA", cat: "Homo", diff: "Med", high: 0.742, avg: 0.550, domain: "Academic", desc: "Citation network node class", data: "Cora", metric: "Accuracy", repo: "https://github.com/tasneem-mselim/GNN_CoRA" },
-    { id: "C13", name: "Topology Ablation", cat: "Gen", diff: "Expert", high: 0.28, avg: 0.105, domain: "Academic", desc: "Few-shot meta-learning", data: "ogbn-arxiv", metric: "Accuracy", repo: "#" },
-    { id: "C14", name: "Brain-Age GNN", cat: "Homo", diff: "Easy", high: 10.6, avg: 6.5, domain: "Medical", desc: "Chronological age regression", data: "OASIS-3", metric: "MAE (Lower is Better)", repo: "https://github.com/bjayadikary/brain-age-gnn-oasis3" },
-    { id: "C15", name: "OctoNode Cup", cat: "Homo", diff: "Med", high: 0.793, avg: 0.671, domain: "Social", desc: "GitHub developer prediction", data: "Social Network", metric: "Macro-F1", repo: "https://github.com/El-Ikram/OctoNode_Cup" },
-    { id: "C16", name: "Graph4ASD", cat: "Homo", diff: "Med", high: 0.626, avg: 0.512, domain: "Neuroimaging", desc: "Brain connectivity (ASD)", data: "ABIDE", metric: "Macro-F1", repo: "https://github.com/RosePY/Graph4ASD-Challenge" },
-    { id: "C17", name: "Mix2Print", cat: "Homo", diff: "Hard", high: 22.0, avg: 6.2, domain: "KG", desc: "Knowledge graph completion", data: "WN18RR", metric: "MRR (Standardized)", repo: "https://github.com/VinitSingroha/Mix2Print" },
-    { id: "C18", name: "THInC Challenge", cat: "Spatial", diff: "Hard", high: 0.565, avg: 0.489, domain: "Biomedical", desc: "Cell type classification", data: "NuCLS", metric: "Macro-F1", repo: "https://github.com/emmakowu3579-ui/inductive-class-challenge" }
+    { id: "C01", name: "PROVEN-GNN", diff: "Med", n: 17, avg: 0.7915, std: 0.1011, high: 0.9001, low: 0.4351, med: 0.8332 },
+    { id: "C02", name: "CGCC", diff: "Hard", n: 17, avg: 0.3825, std: 0.0859, high: 0.5368, low: 0.2051, med: 0.3947 },
+    { id: "C03", name: "Real Or Fake!", diff: "Easy", n: 15, avg: 0.9447, std: 0.0525, high: 0.9803, low: 0.7666, med: 0.9582 },
+    { id: "C04", name: "GLIMPS-GNN", diff: "Hard", n: 16, avg: 0.3890, std: 0.0940, high: 0.6000, low: 0.2800, med: 0.3600 },
+    { id: "C05", name: "GNN_BACE_Challenge", diff: "Med", n: 14, avg: 0.4958, std: 0.0884, high: 0.6741, low: 0.3909, med: 0.5163 },
+    { id: "C06", name: "DiaGraph", diff: "Hard", n: 15, avg: 0.5703, std: 0.1254, high: 0.8224, low: 0.4769, med: 0.5011 },
+    { id: "C07", name: "GRAPE", diff: "Med", n: 16, avg: 0.7067, std: 0.1308, high: 0.8295, low: 0.4000, med: 0.7619 },
+    { id: "C08", name: "Liar Nodes", diff: "Exp", n: 20, avg: 9.5000, std: 30.000, high: 28.000, low: 14.000, med: 8.0000 },
+    { id: "C09", name: "NetLinkArena", diff: "Med", n: 17, avg: 3.5000, std: 16.000, high: 18.000, low: 4.0000, med: 2.0000 },
+    { id: "C10", name: "PARK-GNN Challenge", diff: "Hard", n: 14, avg: 0.7726, std: 0.1160, high: 0.9328, low: 0.5477, med: 0.7832 },
+    { id: "C11", name: "GNN-CoRA", diff: "Med", n: 14, avg: 55.090, std: 19.630, high: 74.200, low: 15.300, med: 63.750 },
+    { id: "C12", name: "GraphFMD", diff: "Med", n: 18, avg: 0.6694, std: 0.1145, high: 0.8063, low: 0.4030, med: 0.7170 },
+    { id: "C13", name: "gnn-topology-ablation", diff: "Exp", n: 16, avg: 10.500, std: 34.000, high: 28.000, low: 18.000, med: 4.0000 },
+    { id: "C14", name: "brain-age-gnn-oasis3", diff: "Easy", n: 14, avg: 6.5300, std: 1.4700, high: 10.640, low: 4.9900, med: 6.2100 },
+    { id: "C15", name: "OctoNode Cup", diff: "Med", n: 15, avg: 0.6718, std: 0.1513, high: 0.7933, low: 0.2113, med: 0.7296 },
+    { id: "C16", name: "Graph4ASD", diff: "Med", n: 14, avg: 0.5125, std: 0.0822, high: 0.6269, low: 0.3891, med: 0.5431 },
+    { id: "C17", name: "Mix2Print", diff: "Hard", n: 13, avg: 6.2000, std: 24.000, high: 22.000, low: 14.000, med: 4.0000 },
+    { id: "C18", name: "The THInC Challenge", diff: "Hard", n: 14, avg: 0.4895, std: 0.0562, high: 0.5652, low: 0.3543, med: 0.4981 }
 ];
 
-function init() {
-    const grid = document.getElementById('grid');
-    const tableBody = document.getElementById('table-body');
-    
-    competitions.forEach(comp => {
-        // Grid Cards
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.dataset.name = comp.name.toLowerCase() + " " + comp.domain.toLowerCase();
-        card.dataset.cat = comp.cat;
-        card.dataset.diff = comp.diff;
-        card.innerHTML = `
-            <h3 onclick="openModalById('${comp.id}')">${comp.name}</h3>
-            <div class="tag-row">
-                <span class="tag">${comp.cat}</span>
-                <span class="tag ${comp.diff}">${comp.diff}</span>
-            </div>
-            <p>${comp.desc}</p>
-            <div class="card-links">
-                <a href="${comp.repo}" target="_blank">🔗 GitHub</a>
-                <a href="#row-${comp.id}">🏆 Stats</a>
-            </div>
-        `;
-        grid.appendChild(card);
+function initTable() {
+    const tbody = document.getElementById('table-body');
+    tbody.innerHTML = competitions.map(c => `
+        <tr data-diff="${c.diff}">
+            <td>${c.id}</td>
+            <td><b>${c.name}</b></td>
+            <td><span class="tag ${c.diff}">${c.diff}</span></td>
+            <td>${c.n}</td>
+            <td>${c.avg.toFixed(4)}</td>
+            <td>${c.std.toFixed(4)}</td>
+            <td>${c.high.toFixed(4)}</td>
+            <td>${c.low.toFixed(4)}</td>
+            <td>${c.med.toFixed(4)}</td>
+        </tr>
+    `).join('');
+}
 
-        // Table Rows
-        const row = document.createElement('tr');
-        row.id = `row-${comp.id}`;
-        row.innerHTML = `
-            <td>${comp.id}</td>
-            <td><b>${comp.name}</b></td>
-            <td><small>${comp.metric}</small></td>
-            <td><span class="tag ${comp.diff}">${comp.diff}</span></td>
-            <td>${comp.high}</td>
-            <td>${comp.avg}</td>
-        `;
-        tableBody.appendChild(row);
+function filterTable() {
+    const search = document.getElementById('search').value.toLowerCase();
+    const diff = document.getElementById('diffFilter').value;
+    const rows = document.querySelectorAll('#table-body tr');
+
+    rows.forEach(row => {
+        const text = row.cells[1].innerText.toLowerCase();
+        const rowDiff = row.getAttribute('data-diff');
+        const matchesText = text.includes(search);
+        const matchesDiff = diff === 'all' || rowDiff === diff;
+        row.style.display = (matchesText && matchesDiff) ? '' : 'none';
     });
 }
-
-function filter() {
-    const text = document.getElementById('search').value.toLowerCase();
-    const category = document.getElementById('cat').value;
-    const difficulty = document.getElementById('diff').value;
-    
-    document.querySelectorAll('.card').forEach(card => {
-        const matchesText = card.dataset.name.includes(text);
-        const matchesCat = category === 'all' || card.dataset.cat === category;
-        const matchesDiff = difficulty === 'all' || card.dataset.diff === difficulty;
-        card.style.display = (matchesText && matchesCat && matchesDiff) ? 'flex' : 'none';
-    });
-}
-
-function openModalById(id) {
-    const comp = competitions.find(c => c.id === id);
-    document.getElementById('modal').style.display = 'block';
-    document.getElementById('m-title').innerText = comp.name;
-    document.getElementById('m-domain').innerText = comp.domain;
-    document.getElementById('m-desc').innerText = comp.desc;
-    document.getElementById('m-data').innerText = comp.data;
-    document.getElementById('m-metric').innerText = comp.metric;
-}
-
-function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
 function sortTable(n) {
     const table = document.getElementById("mainTable");
@@ -221,7 +137,7 @@ function sortTable(n) {
     rows.sort((a, b) => {
         let valA = a.cells[n].innerText;
         let valB = b.cells[n].innerText;
-        if(!isNaN(parseFloat(valA))) {
+        if (!isNaN(parseFloat(valA))) {
             return isAsc ? parseFloat(valA) - parseFloat(valB) : parseFloat(valB) - parseFloat(valA);
         }
         return isAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
@@ -231,7 +147,7 @@ function sortTable(n) {
     table.dataset.sortOrder = isAsc ? 'desc' : 'asc';
 }
 
-init();
+initTable();
 </script>
 </body>
 </html>
