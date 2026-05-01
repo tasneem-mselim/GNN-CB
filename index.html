@@ -2,50 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>GNN Coding Benchmark - Human Leaderboard</title>
+    <title>GNN Coding Benchmark</title>
     <style>
         body { margin: 0; font-family: "Segoe UI", sans-serif; background: #f4fff6; color: #111; scroll-behavior: smooth; }
         nav { position: sticky; top: 0; background: white; padding: 12px 30px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; z-index: 100; }
         nav a { margin-left: 20px; text-decoration: none; color: #2d6a4f; font-weight: 600; }
-        header { text-align: center; padding: 40px 20px; }
-        .section { width: 98%; max-width: 1400px; margin: 20px auto; }
+        header { text-align: center; padding: 50px 20px; }
+        .section { width: 95%; max-width: 1300px; margin: 40px auto; }
         h2 { border-bottom: 2px solid #cde8d0; padding-bottom: 10px; color: #1b4332; }
         
+        /* FILTERS */
         .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: white; padding: 15px; border-radius: 8px; border: 1px solid #d8f3dc; }
         input, select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; flex-grow: 1; min-width: 150px; }
 
-        .table-container { overflow-x: auto; background: white; border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
-        th, td { padding: 12px 15px; border-bottom: 1px solid #eee; text-align: left; }
-        th { background: #2d6a4f; color: white; cursor: pointer; white-space: nowrap; position: sticky; top: 0; }
-        tr:hover { background: #f1f8e9; }
-
-        .tag { font-size: 0.75em; padding: 2px 6px; border-radius: 4px; font-weight: bold; background: #e9ecef; }
+        /* CARDS */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 18px; border-radius: 10px; border: 1px solid #d8f3dc; transition: 0.3s; display: flex; flex-direction: column; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: #2d6a4f; }
+        .card h3 { margin: 0 0 10px 0; color: #2d6a4f; cursor: pointer; }
+        .card p { font-size: 0.85em; color: #555; flex-grow: 1; margin-bottom: 15px; }
+        
+        .tag-row { display: flex; gap: 5px; margin-bottom: 15px; }
+        .tag { font-size: 0.7em; padding: 3px 8px; border-radius: 12px; background: #e9ecef; font-weight: bold; }
         .tag.Easy { background: #d8f3dc; color: #2d6a4f; }
         .tag.Med { background: #fff3b0; color: #997b00; }
         .tag.Hard { background: #ffd7ba; color: #d9480f; }
         .tag.Exp { background: #f8ad9d; color: #a4161a; }
 
-        footer { text-align: center; padding: 40px; color: #666; font-size: 0.8em; }
+        .card-links { display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 10px; }
+        .card-links a { font-size: 0.8em; text-decoration: none; color: #2d6a4f; font-weight: bold; padding: 5px 10px; border: 1px solid #2d6a4f; border-radius: 4px; transition: 0.2s; }
+        .card-links a:hover { background: #2d6a4f; color: white; }
+
+        /* TABLE */
+        .table-container { overflow-x: auto; background: white; border-radius: 8px; border: 1px solid #ddd; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: #2d6a4f; color: white; cursor: pointer; white-space: nowrap; }
+        tr:hover { background: #f1f8e9; }
+
+        footer { text-align: center; padding: 40px; color: #666; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
 <nav>
     <div><b>GNN-CB</b></div>
-    <div><a href="#leaderboard">Human Leaderboard</a></div>
+    <div>
+        <a href="#tasks">Competitions</a>
+        <a href="#leaderboard">Human Leaderboard</a>
+    </div>
 </nav>
 
 <header>
     <h1>GNN Coding Benchmark</h1>
-    <p>Official Human Performance Results from Table 4</p>
+    <p>Filtering and navigating the performance of GNN competition architectures.</p>
 </header>
 
-<div class="section" id="leaderboard">
-    <h2>🏆 Human Leaderboard</h2>
+<div class="section" id="tasks">
+    <h2>🧠 Benchmark Tasks</h2>
+    
     <div class="controls">
-        <input type="text" id="search" placeholder="Search competitions..." onkeyup="filterTable()">
-        <select id="diffFilter" onchange="filterTable()">
+        <input type="text" id="search" placeholder="Search tasks or domains..." onkeyup="filter()">
+        
+        <select id="diff" onchange="filter()">
             <option value="all">All Difficulties</option>
             <option value="Easy">Easy</option>
             <option value="Med">Medium</option>
@@ -54,6 +73,13 @@
         </select>
     </div>
 
+    <div class="grid" id="grid">
+        <!-- JS generates cards -->
+    </div>
+</div>
+
+<div class="section" id="leaderboard">
+    <h2>🏆 Human Leaderboard</h2>
     <div class="table-container">
         <table id="mainTable">
             <thead>
@@ -69,7 +95,9 @@
                     <th onclick="sortTable(8)">Median</th>
                 </tr>
             </thead>
-            <tbody id="table-body"></tbody>
+            <tbody id="table-body">
+                <!-- JS generates rows -->
+            </tbody>
         </table>
     </div>
 </div>
@@ -78,54 +106,76 @@
 
 <script>
 const competitions = [
-    { id: "C01", name: "PROVEN-GNN", diff: "Med", n: 17, avg: 0.7915, std: 0.1011, high: 0.9001, low: 0.4351, med: 0.8332 },
-    { id: "C02", name: "CGCC", diff: "Hard", n: 17, avg: 0.3825, std: 0.0859, high: 0.5368, low: 0.2051, med: 0.3947 },
-    { id: "C03", name: "Real Or Fake!", diff: "Easy", n: 15, avg: 0.9447, std: 0.0525, high: 0.9803, low: 0.7666, med: 0.9582 },
-    { id: "C04", name: "GLIMPS-GNN", diff: "Hard", n: 16, avg: 0.3890, std: 0.0940, high: 0.6000, low: 0.2800, med: 0.3600 },
-    { id: "C05", name: "GNN_BACE_Challenge", diff: "Med", n: 14, avg: 0.4958, std: 0.0884, high: 0.6741, low: 0.3909, med: 0.5163 },
-    { id: "C06", name: "DiaGraph", diff: "Hard", n: 15, avg: 0.5703, std: 0.1254, high: 0.8224, low: 0.4769, med: 0.5011 },
-    { id: "C07", name: "GRAPE", diff: "Med", n: 16, avg: 0.7067, std: 0.1308, high: 0.8295, low: 0.4000, med: 0.7619 },
-    { id: "C08", name: "Liar Nodes", diff: "Exp", n: 20, avg: 9.5000, std: 30.000, high: 28.000, low: 14.000, med: 8.0000 },
-    { id: "C09", name: "NetLinkArena", diff: "Med", n: 17, avg: 3.5000, std: 16.000, high: 18.000, low: 4.0000, med: 2.0000 },
-    { id: "C10", name: "PARK-GNN Challenge", diff: "Hard", n: 14, avg: 0.7726, std: 0.1160, high: 0.9328, low: 0.5477, med: 0.7832 },
-    { id: "C11", name: "GNN-CoRA", diff: "Med", n: 14, avg: 55.090, std: 19.630, high: 74.200, low: 15.300, med: 63.750 },
-    { id: "C12", name: "GraphFMD", diff: "Med", n: 18, avg: 0.6694, std: 0.1145, high: 0.8063, low: 0.4030, med: 0.7170 },
-    { id: "C13", name: "gnn-topology-ablation", diff: "Exp", n: 16, avg: 10.500, std: 34.000, high: 28.000, low: 18.000, med: 4.0000 },
-    { id: "C14", name: "brain-age-gnn-oasis3", diff: "Easy", n: 14, avg: 6.5300, std: 1.4700, high: 10.640, low: 4.9900, med: 6.2100 },
-    { id: "C15", name: "OctoNode Cup", diff: "Med", n: 15, avg: 0.6718, std: 0.1513, high: 0.7933, low: 0.2113, med: 0.7296 },
-    { id: "C16", name: "Graph4ASD", diff: "Med", n: 14, avg: 0.5125, std: 0.0822, high: 0.6269, low: 0.3891, med: 0.5431 },
-    { id: "C17", name: "Mix2Print", diff: "Hard", n: 13, avg: 6.2000, std: 24.000, high: 22.000, low: 14.000, med: 4.0000 },
-    { id: "C18", name: "The THInC Challenge", diff: "Hard", n: 14, avg: 0.4895, std: 0.0562, high: 0.5652, low: 0.3543, med: 0.4981 }
+    { id: "C01", name: "PROVEN-GNN", diff: "Med", n: 17, avg: 0.7915, std: 0.1011, high: 0.9001, low: 0.4351, med: 0.8332, desc: "Graph classification on code graphs", repo: "https://github.com/abdksm/PROVEN-GNN/" },
+    { id: "C02", name: "CGCC", diff: "Hard", n: 17, avg: 0.3825, std: 0.0859, high: 0.5368, low: 0.2051, med: 0.3947, desc: "City street-network layouts", repo: "https://github.com/Murad-Hossen/CGCC" },
+    { id: "C03", name: "Real Or Fake!", diff: "Easy", n: 15, avg: 0.9447, std: 0.0525, high: 0.9803, low: 0.7666, med: 0.9582, desc: "Binary Graph Classification for Fake News", repo: "https://github.com/TugaAhmed/Real_Or_Fake/tree/main" },
+    { id: "C04", name: "GLIMPS-GNN", diff: "Hard", n: 16, avg: 0.3890, std: 0.0940, high: 0.6000, low: 0.2800, med: 0.3600, desc: "cfRNA preeclampsia classification", repo: "https://github.com/Mubarraqqq/gnn-challenge" },
+    { id: "C05", name: "GNN_BACE_Challenge", diff: "Med", n: 14, avg: 0.4958, std: 0.0884, high: 0.6741, low: 0.3909, med: 0.5163, desc: "Molecular graph classification (BACE-1)", repo: "https://github.com/hadilaff/GNN_BACE_Challenge" },
+    { id: "C06", name: "DiaGraph", diff: "Hard", n: 15, avg: 0.5703, std: 0.1254, high: 0.8224, low: 0.4769, med: 0.5011, desc: "Node classification on patient similarity graph", repo: "#" },
+    { id: "C07", name: "GRAPE", diff: "Med", n: 16, avg: 0.7067, std: 0.1308, high: 0.8295, low: 0.4000, med: 0.7619, desc: "Diabetic retinopathy from retinal vessel graphs", repo: "https://github.com/Muhammad0isah/GRAPE" },
+    { id: "C08", name: "Liar Nodes", diff: "Exp", n: 20, avg: 9.5, std: 30, high: 28, low: 14, med: 8, desc: "Spatio-temporal traffic speed prediction", repo: "#" },
+    { id: "C09", name: "NetLinkArena", diff: "Med", n: 17, avg: 3.5, std: 16, high: 18, low: 4, med: 2, desc: "Point cloud classification", repo: "https://github.com/ignatiusbalayo/NetLinkArena" },
+    { id: "C10", name: "PARK-GNN Challenge", diff: "Hard", n: 14, avg: 0.7726, std: 0.1160, high: 0.9328, low: 0.5477, med: 0.7832, desc: "Parkinson's detection from acoustic voice", repo: "https://github.com/AiIkram/gnn-parkinsons-challenge" },
+    { id: "C11", name: "GNN-CoRA", diff: "Med", n: 14, avg: 55.09, std: 19.63, high: 74.20, low: 15.30, med: 63.75, desc: "Node classification on citation network", repo: "https://github.com/tasneem-mselim/GNN_CoRA" },
+    { id: "C12", name: "GraphFMD", diff: "Med", n: 18, avg: 0.6694, std: 0.1145, high: 0.8063, low: 0.4030, med: 0.7170, desc: "Predict illicit vs licit Bitcoin transactions", repo: "https://github.com/faranbutt/GraphFMD" },
+    { id: "C13", name: "gnn-topology-ablation", diff: "Exp", n: 16, avg: 10.5, std: 34, high: 28, low: 18, med: 4, desc: "Meta-learning for node classification", repo: "#" },
+    { id: "C14", name: "brain-age-gnn-oasis3", diff: "Easy", n: 14, avg: 6.53, std: 1.47, high: 10.64, low: 4.99, med: 6.21, desc: "Graph regression for age prediction", repo: "https://github.com/bjayadikary/brain-age-gnn-oasis3" },
+    { id: "C15", name: "OctoNode Cup", diff: "Med", n: 15, avg: 0.6718, std: 0.1513, high: 0.7933, low: 0.2113, med: 0.7296, desc: "Predict Web vs ML developers", repo: "https://github.com/El-Ikram/OctoNode_Cup" },
+    { id: "C16", name: "Graph4ASD", diff: "Med", n: 14, avg: 0.5125, std: 0.0822, high: 0.6269, low: 0.3891, med: 0.5431, desc: "Brain connectivity classification", repo: "https://github.com/RosePY/Graph4ASD-Challenge" },
+    { id: "C17", name: "Mix2Print", diff: "Hard", n: 13, avg: 6.2, std: 24, high: 22, low: 14, med: 4, desc: "Knowledge graph completion", repo: "https://github.com/VinitSingroha/Mix2Print" },
+    { id: "C18", name: "The THInC Challenge", diff: "Hard", n: 14, avg: 0.4895, std: 0.0562, high: 0.5652, low: 0.3543, med: 0.4981, desc: "Cell type classification", repo: "https://github.com/emmakowu3579-ui/inductive-class-challenge" }
 ];
 
-function initTable() {
-    const tbody = document.getElementById('table-body');
-    tbody.innerHTML = competitions.map(c => `
-        <tr data-diff="${c.diff}">
-            <td>${c.id}</td>
-            <td><b>${c.name}</b></td>
-            <td><span class="tag ${c.diff}">${c.diff}</span></td>
-            <td>${c.n}</td>
-            <td>${c.avg.toFixed(4)}</td>
-            <td>${c.std.toFixed(4)}</td>
-            <td>${c.high.toFixed(4)}</td>
-            <td>${c.low.toFixed(4)}</td>
-            <td>${c.med.toFixed(4)}</td>
-        </tr>
-    `).join('');
+function init() {
+    const grid = document.getElementById('grid');
+    const tableBody = document.getElementById('table-body');
+    
+    competitions.forEach(comp => {
+        // Build Cards
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.name = comp.name.toLowerCase();
+        card.dataset.diff = comp.diff;
+        card.innerHTML = `
+            <h3>${comp.name}</h3>
+            <div class="tag-row">
+                <span class="tag ${comp.diff}">${comp.diff}</span>
+                <span class="tag">N=${comp.n}</span>
+            </div>
+            <p>${comp.desc}</p>
+            <div class="card-links">
+                <a href="${comp.repo}" target="_blank">🔗 Repo</a>
+                <a href="#row-${comp.id}">🏆 Rank</a>
+            </div>
+        `;
+        grid.appendChild(card);
+
+        // Build Table Rows
+        const row = document.createElement('tr');
+        row.id = `row-${comp.id}`;
+        row.innerHTML = `
+            <td>${comp.id}</td>
+            <td><b>${comp.name}</b></td>
+            <td><span class="tag ${comp.diff}">${comp.diff}</span></td>
+            <td>${comp.n}</td>
+            <td>${comp.avg}</td>
+            <td>${comp.std}</td>
+            <td>${comp.high}</td>
+            <td>${comp.low}</td>
+            <td>${comp.med}</td>
+        `;
+        tableBody.appendChild(row);
+    });
 }
 
-function filterTable() {
-    const search = document.getElementById('search').value.toLowerCase();
-    const diff = document.getElementById('diffFilter').value;
-    const rows = document.querySelectorAll('#table-body tr');
-
-    rows.forEach(row => {
-        const text = row.cells[1].innerText.toLowerCase();
-        const rowDiff = row.getAttribute('data-diff');
-        const matchesText = text.includes(search);
-        const matchesDiff = diff === 'all' || rowDiff === diff;
-        row.style.display = (matchesText && matchesDiff) ? '' : 'none';
+function filter() {
+    const text = document.getElementById('search').value.toLowerCase();
+    const difficulty = document.getElementById('diff').value;
+    
+    document.querySelectorAll('.card').forEach(card => {
+        const matchesText = card.dataset.name.includes(text);
+        const matchesDiff = difficulty === 'all' || card.dataset.diff === difficulty;
+        card.style.display = (matchesText && matchesDiff) ? 'flex' : 'none';
     });
 }
 
@@ -137,7 +187,7 @@ function sortTable(n) {
     rows.sort((a, b) => {
         let valA = a.cells[n].innerText;
         let valB = b.cells[n].innerText;
-        if (!isNaN(parseFloat(valA))) {
+        if(!isNaN(parseFloat(valA))) {
             return isAsc ? parseFloat(valA) - parseFloat(valB) : parseFloat(valB) - parseFloat(valA);
         }
         return isAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
@@ -147,7 +197,7 @@ function sortTable(n) {
     table.dataset.sortOrder = isAsc ? 'desc' : 'asc';
 }
 
-initTable();
+init();
 </script>
 </body>
 </html>
