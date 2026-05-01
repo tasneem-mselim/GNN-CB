@@ -33,7 +33,7 @@
         .tag.Expert { background: #f8ad9d; color: #a4161a; }
 
         /* CARD LINKS */
-        .card-links { display: flex; gap: 10px; border-top: 1px solid #eee; pt: 10px; padding-top: 10px; }
+        .card-links { display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 10px; }
         .card-links a { font-size: 0.8em; text-decoration: none; color: #2d6a4f; font-weight: bold; padding: 5px 10px; border: 1px solid #2d6a4f; border-radius: 4px; transition: 0.2s; }
         .card-links a:hover { background: #2d6a4f; color: white; }
 
@@ -43,6 +43,9 @@
         th { background: #2d6a4f; color: white; cursor: pointer; }
         tr:hover { background: #f9f9f9; }
         tr:target { background-color: #f1f8e9; outline: 2px solid #2d6a4f; }
+
+        /* CHART CONTAINER */
+        #chart-wrapper { background: white; padding: 20px; border-radius: 10px; border: 1px solid #d8f3dc; height: 600px; position: relative; }
 
         /* MODAL */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
@@ -65,9 +68,8 @@
 </nav>
 
 <header id="overview">
-    <!-- <img class="logo" src="img/logo.png" alt="Basira Lab"> -->
     <h1>GNN Coding Benchmark</h1>
-    <p>Filtering and navigating the performance of GNN competition architectures.</p>
+    <p>Performance overview across 18 distinct Graph Neural Network competitions.</p>
 </header>
 
 <div class="section" id="tasks">
@@ -75,7 +77,6 @@
     
     <div class="controls">
         <input type="text" id="search" placeholder="Search tasks or domains..." onkeyup="filter()">
-        
         <select id="cat" onchange="filter()">
             <option value="all">All Graph Types</option>
             <option value="Homo">Homo</option>
@@ -84,8 +85,8 @@
             <option value="Spatial">Spatial</option>
             <option value="Hier">Hierarchical</option>
             <option value="Molecular">Molecular</option>
+            <option value="Gen">Meta-Learning</option>
         </select>
-
         <select id="diff" onchange="filter()">
             <option value="all">All Difficulties</option>
             <option value="Easy">Easy</option>
@@ -95,14 +96,15 @@
         </select>
     </div>
 
-    <div class="grid" id="grid">
-        <!-- JS generates cards -->
-    </div>
+    <div class="grid" id="grid"></div>
 </div>
 
 <div class="section" id="results">
-    <h2>📊 Performance Analysis</h2>
-    <canvas id="chart" height="100"></canvas>
+    <h2>📊 All-Competition Performance Analysis</h2>
+    <div id="chart-wrapper">
+        <canvas id="chart"></canvas>
+    </div>
+    <p style="font-size: 0.8em; color: #666; margin-top: 10px;">*Note: Scales vary between F1-Score (0-1), MAE (lower is better), and Accuracy (%).</p>
 </div>
 
 <div class="section" id="leaderboard">
@@ -118,9 +120,7 @@
                 <th onclick="sortTable(5)">Avg Score</th>
             </tr>
         </thead>
-        <tbody id="leaderboard-body">
-            <!-- JS generates rows -->
-        </tbody>
+        <tbody id="leaderboard-body"></tbody>
     </table>
 </div>
 
@@ -144,17 +144,17 @@ const competitions = [
     { id: "C02", name: "CGCC", cat: "Homo", diff: "Hard", high: 0.53, avg: 0.38, domain: "Urban", desc: "City street-network layouts", data: "OpenStreetMap", metric: "Macro-F1", repo: "https://github.com/Murad-Hossen/CGCC" },
     { id: "C03", name: "Real Or Fake!", cat: "Hier", diff: "Easy", high: 0.98, avg: 0.94, domain: "Social", desc: "Binary Graph Classification for Fake News", data: "GossipCop", metric: "Binary F1", repo: "https://github.com/TugaAhmed/Real_Or_Fake/tree/main" },
     { id: "C04", name: "GLIMPS-GNN", cat: "Hetero", diff: "Hard", high: 0.60, avg: 0.39, domain: "Biomedical", desc: "cfRNA preeclampsia classification", data: "GEO: GSE192902", metric: "F1 score", repo: "https://github.com/Mubarraqqq/gnn-challenge" },
-    { id: "C05", name: "GNN_BACE_Challenge", cat: "Molecular", diff: "Med", high: 0.67, avg: 0.49, domain: "Medical", desc: "Molecular graph classification (BACE-1)", data: "MoleculeNet", metric: "Macro-F1", repo: "https://github.com/hadilaff/GNN_BACE_Challenge" },
+    { id: "C05", name: "GNN_BACE", cat: "Molecular", diff: "Med", high: 0.67, avg: 0.49, domain: "Medical", desc: "Molecular graph classification (BACE-1)", data: "MoleculeNet", metric: "Macro-F1", repo: "https://github.com/hadilaff/GNN_BACE_Challenge" },
     { id: "C06", name: "DiaGraph", cat: "Homo", diff: "Hard", high: 0.82, avg: 0.57, domain: "Medical", desc: "Node classification on patient similarity graph", data: "Kaggle Diabetes", metric: "Macro-F1", repo: "#" },
-    { id: "C07", name: "GRAPE", cat: "Spatial", diff: "Med", high: 0.82, avg: 0.70, domain: "Medical", desc: "Diabetic retinopathy from retinal vessel graphs", data: "DRIVE/STARE/HRF", metric: "Macro-F1", repo: "https://github.com/Muhammad0isah/GRAPE" },
-    { id: "C08", name: "Liar Nodes", cat: "Temp", diff: "Expert", high: 28, avg: 9.5, domain: "Transport", desc: "Spatio-temporal traffic speed prediction", data: "METR-LA", metric: "MAE", repo: "#" },
-    { id: "C09", name: "GraphFMD", cat: "Temp", diff: "Med", high: 0.80, avg: 0.66, domain: "Finance", desc: "Predict illicit vs licit Bitcoin transactions", data: "Elliptic", metric: "Macro-F1", repo: "https://github.com/faranbutt/GraphFMD" },
+    { id: "C07", name: "GRAPE", cat: "Spatial", diff: "Med", high: 0.82, avg: 0.70, domain: "Medical", desc: "Diabetic retinopathy detection", data: "DRIVE/STARE/HRF", metric: "Macro-F1", repo: "https://github.com/Muhammad0isah/GRAPE" },
+    { id: "C08", name: "Liar Nodes", cat: "Temp", diff: "Expert", high: 28, avg: 9.5, domain: "Transport", desc: "Traffic speed prediction", data: "METR-LA", metric: "MAE", repo: "#" },
+    { id: "C09", name: "GraphFMD", cat: "Temp", diff: "Med", high: 0.80, avg: 0.66, domain: "Finance", desc: "Illicit Bitcoin transaction prediction", data: "Elliptic", metric: "Macro-F1", repo: "https://github.com/faranbutt/GraphFMD" },
     { id: "C10", name: "NetLinkArena", cat: "Spatial", diff: "Med", high: 18, avg: 3.5, domain: "Vision", desc: "Point cloud classification", data: "ModelNet40", metric: "OA", repo: "https://github.com/ignatiusbalayo/NetLinkArena" },
-    { id: "C11", name: "PARK-GNN", cat: "Homo", diff: "Hard", high: 0.93, avg: 0.77, domain: "Medical", desc: "Parkinson's detection from acoustic voice", data: "UCI Parkinson's", metric: "Macro-F1", repo: "https://github.com/AiIkram/gnn-parkinsons-challenge" },
-    { id: "C12", name: "GNN-CoRA", cat: "Homo", diff: "Med", high: 74.2, avg: 55.0, domain: "Academic", desc: "Node classification on citation network", data: "Cora", metric: "Accuracy", repo: "https://github.com/tasneem-mselim/GNN_CoRA" },
-    { id: "C13", name: "Topology Ablation", cat: "Gen", diff: "Expert", high: 28, avg: 10.5, domain: "Academic", desc: "Meta-learning for node classification", data: "ogbn-arxiv", metric: "Accuracy", repo: "#" },
-    { id: "C14", name: "Brain-Age GNN", cat: "Homo", diff: "Easy", high: 10.6, avg: 6.5, domain: "Medical", desc: "Graph regression for age prediction", data: "OASIS-3", metric: "MAE", repo: "https://github.com/bjayadikary/brain-age-gnn-oasis3" },
-    { id: "C15", name: "OctoNode Cup", cat: "Homo", diff: "Med", high: 0.79, avg: 0.67, domain: "Social", desc: "Predict Web vs ML developers", data: "GitHub Social", metric: "Macro-F1", repo: "https://github.com/El-Ikram/OctoNode_Cup" },
+    { id: "C11", name: "PARK-GNN", cat: "Homo", diff: "Hard", high: 0.93, avg: 0.77, domain: "Medical", desc: "Parkinson's detection", data: "UCI Parkinson's", metric: "Macro-F1", repo: "https://github.com/AiIkram/gnn-parkinsons-challenge" },
+    { id: "C12", name: "GNN-CoRA", cat: "Homo", diff: "Med", high: 74.2, avg: 55.0, domain: "Academic", desc: "Citation network classification", data: "Cora", metric: "Accuracy", repo: "https://github.com/tasneem-mselim/GNN_CoRA" },
+    { id: "C13", name: "Topology Ablation", cat: "Gen", diff: "Expert", high: 28, avg: 10.5, domain: "Academic", desc: "Few-shot node classification", data: "ogbn-arxiv", metric: "Accuracy", repo: "#" },
+    { id: "C14", name: "Brain-Age GNN", cat: "Homo", diff: "Easy", high: 10.6, avg: 6.5, domain: "Medical", desc: "Age prediction regression", data: "OASIS-3", metric: "MAE", repo: "https://github.com/bjayadikary/brain-age-gnn-oasis3" },
+    { id: "C15", name: "OctoNode Cup", cat: "Homo", diff: "Med", high: 0.79, avg: 0.67, domain: "Social", desc: "Web vs ML developer prediction", data: "GitHub Social", metric: "Macro-F1", repo: "https://github.com/El-Ikram/OctoNode_Cup" },
     { id: "C16", name: "Graph4ASD", cat: "Homo", diff: "Med", high: 0.62, avg: 0.51, domain: "Neuroimaging", desc: "Brain connectivity classification", data: "ABIDE", metric: "Macro-F1", repo: "https://github.com/RosePY/Graph4ASD-Challenge" },
     { id: "C17", name: "Mix2Print", cat: "Homo", diff: "Hard", high: 22, avg: 6.2, domain: "KG", desc: "Knowledge graph completion", data: "WN18RR", metric: "MRR", repo: "https://github.com/VinitSingroha/Mix2Print" },
     { id: "C18", name: "The THInC Challenge", cat: "Spatial", diff: "Hard", high: 0.56, avg: 0.48, domain: "Biomedical", desc: "Cell type classification", data: "NuCLS", metric: "Macro-F1", repo: "https://github.com/emmakowu3579-ui/inductive-class-challenge" }
@@ -165,13 +165,11 @@ function init() {
     const tableBody = document.getElementById('leaderboard-body');
     
     competitions.forEach(comp => {
-        // Grid Cards
         const card = document.createElement('div');
         card.className = 'card';
         card.dataset.name = comp.name.toLowerCase();
         card.dataset.cat = comp.cat;
         card.dataset.diff = comp.diff;
-        
         card.innerHTML = `
             <h3 onclick="openModalById('${comp.id}')">${comp.name}</h3>
             <div class="tag-row">
@@ -186,13 +184,11 @@ function init() {
         `;
         grid.appendChild(card);
 
-        // Table Rows
         const row = document.createElement('tr');
         row.id = `row-${comp.id}`;
         row.innerHTML = `<td>${comp.id}</td><td><b>${comp.name}</b></td><td>${comp.cat}</td><td>${comp.diff}</td><td>${comp.high}</td><td>${comp.avg}</td>`;
         tableBody.appendChild(row);
     });
-
     renderChart();
 }
 
@@ -200,7 +196,6 @@ function filter() {
     const text = document.getElementById('search').value.toLowerCase();
     const category = document.getElementById('cat').value;
     const difficulty = document.getElementById('diff').value;
-    
     document.querySelectorAll('.card').forEach(card => {
         const matchesText = card.dataset.name.includes(text);
         const matchesCat = category === 'all' || card.dataset.cat === category;
@@ -222,17 +217,23 @@ function openModalById(id) {
 function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
 function renderChart() {
-    const chartComps = competitions.filter(c => c.avg < 2); 
     new Chart(document.getElementById("chart"), {
         type: 'bar',
         data: {
-            labels: chartComps.map(c => c.name),
+            labels: competitions.map(c => c.name),
             datasets: [
-                { label: 'Highest Score', data: chartComps.map(c => c.high), backgroundColor: '#52b788' },
-                { label: 'Avg Human Score', data: chartComps.map(c => c.avg), backgroundColor: '#2d6a4f' }
+                { label: 'Highest Score', data: competitions.map(c => c.high), backgroundColor: '#52b788' },
+                { label: 'Avg Human Score', data: competitions.map(c => c.avg), backgroundColor: '#2d6a4f' }
             ]
         },
-        options: { responsive: true }
+        options: { 
+            indexAxis: 'y', // Makes it horizontal so 18 labels fit nicely
+            responsive: true, 
+            maintainAspectRatio: false,
+            scales: {
+                x: { title: { display: true, text: 'Score Value (Note: Units vary per task)' } }
+            }
+        }
     });
 }
 
@@ -243,7 +244,7 @@ function sortTable(n) {
     rows.sort((a, b) => {
         let valA = a.cells[n].innerText;
         let valB = b.cells[n].innerText;
-        if(!isNaN(valA)) return isAsc ? valA - valB : valB - valA;
+        if(!isNaN(parseFloat(valA))) return isAsc ? valA - valB : valB - valA;
         return isAsc ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
     });
     rows.forEach(r => table.appendChild(r));
