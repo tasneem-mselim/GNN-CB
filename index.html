@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GNN-CB: Graph Neural Network Competition Benchmark</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Design tokens ─────────────────────────────────────────────── */
+    :root {
+      --bg:           #0d1117;
+      --surface:      #161b22;
+      --surface2:     #21262d;
+      --border:       #30363d;
+      --border-light: #3d4450;
+
+      --ink:          #e6edf3;
+      --ink-2:        #8b949e;
+      --ink-3:        #6e7681;
+
+      --accent:       #2ea043;
+      --accent-dim:   #1a3a23;
+      --accent-glow:  rgba(46,160,67,0.18);
+
+      --blue:         #388bfd;
+      --blue-dim:     #1c2d4a;
+      --orange:       #d29922;
+      --orange-dim:   #3d2d10;
+      --red:          #f85149;
+      --red-dim:      #3d1414;
+      --purple:       #bc8cff;
+
+      --easy:   #2ea043; --easy-bg:   #0d2b14;
+      --med:    #d29922; --med-bg:    #2d2208;
+      --hard:   #e05c42; --hard-bg:   #2d1208;
+      --expert: #bc8cff; --expert-bg: #1e1228;
+
+      --font-sans: 'DM Sans', system-ui, sans-serif;
+      --font-serif: 'Fraunces', Georgia, serif;
+      --font-mono: 'DM Mono', monospace;
+
+      --r-sm: 6px;
+      --r-md: 10px;
+      --r-lg: 16px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
+    }
+
+    /* ─── Reset & base ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 15px; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ─── Scrollbar ─────────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 4px; }
+
+    /* ─── Nav ───────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(13,17,23,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 56px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-serif); font-size: 1.15rem;
+      font-weight: 600; color: var(--ink); letter-spacing: -0.01em;
+    }
+    .nav-brand .dot { color: var(--accent); }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a {
+      font-size: 0.82rem; font-weight: 500; color: var(--ink-2);
+      padding: 4px 0; letter-spacing: 0.02em;
+      transition: color .15s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--ink); text-decoration: none; }
+    .nav-pill {
+      background: var(--accent); color: #fff !important;
+      padding: 5px 14px !important; border-radius: 99px;
+      font-size: 0.78rem !important; font-weight: 600 !important;
+    }
+    .nav-pill:hover { background: #3bbf52 !important; }
+
+    /* ─── Hero ──────────────────────────────────────────────────────── */
+    .hero {
+      position: relative; overflow: hidden;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(46,160,67,0.14) 0%, transparent 70%);
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(48,54,61,0.3) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(48,54,61,0.3) 40px);
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, black 30%, transparent 100%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent-dim); border: 1px solid var(--accent);
+      color: var(--accent); border-radius: 99px;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.07em;
+      padding: 4px 14px; margin-bottom: 1.4rem; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700; line-height: 1.12;
+      letter-spacing: -0.03em; margin-bottom: 0.5rem;
+    }
+    .hero h1 em { font-style: italic; color: var(--accent); }
+    .hero-subtitle {
+      max-width: 680px; margin: 0.8rem auto 2rem;
+      font-size: 1rem; color: var(--ink-2); line-height: 1.7;
+    }
+
+    /* badges row */
+    .badge-row {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      justify-content: center; margin-bottom: 2.4rem;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r-sm); padding: 5px 11px;
+      font-size: 0.75rem; font-weight: 500; color: var(--ink-2);
+      transition: border-color .15s, color .15s;
+    }
+    .badge:hover { border-color: var(--accent); color: var(--ink); text-decoration: none; }
+    .badge .bi { font-size: 0.85em; }
+
+    /* stat pills */
+    .hero-stats {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 1.5rem; margin-top: 2rem;
+    }
+    .stat-pill {
+      display: flex; flex-direction: column; align-items: center;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r-md); padding: 0.9rem 1.8rem;
+      min-width: 110px;
+    }
+    .stat-pill .val {
+      font-family: var(--font-serif); font-size: 1.9rem;
+      font-weight: 700; color: var(--accent); line-height: 1;
+    }
+    .stat-pill .lbl { font-size: 0.72rem; color: var(--ink-2); margin-top: 4px; letter-spacing: 0.04em; }
+
+    /* ─── Section wrapper ───────────────────────────────────────────── */
+    .section { max-width: 1320px; margin: 0 auto; padding: 3.5rem 2rem; }
+    .section + .section { padding-top: 0; }
+    .section-divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    h2.section-title {
+      font-family: var(--font-serif); font-size: 1.5rem;
+      font-weight: 600; letter-spacing: -0.02em;
+      margin-bottom: 0.35rem; color: var(--ink);
+    }
+    h2.section-title .section-icon { color: var(--accent); margin-right: 6px; }
+    .section-desc { color: var(--ink-2); font-size: 0.9rem; margin-bottom: 1.8rem; }
+
+    /* ─── Key findings cards ────────────────────────────────────────── */
+    .findings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem; margin-top: 1.5rem;
+    }
+    .finding-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r-md); padding: 1.2rem 1.4rem;
+      border-left: 3px solid var(--accent);
+      transition: box-shadow .2s;
+    }
+    .finding-card:hover { box-shadow: var(--shadow); }
+    .finding-card h4 {
+      font-size: 0.85rem; font-weight: 600; color: var(--accent);
+      margin-bottom: 0.5rem; letter-spacing: 0.01em;
+    }
+    .finding-card p { font-size: 0.83rem; color: var(--ink-2); line-height: 1.6; }
+
+    /* ─── Competition explorer ──────────────────────────────────────── */
+    .controls {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1.4rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r-md); padding: 1rem 1.2rem;
+    }
+    .controls input, .controls select {
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--ink); border-radius: var(--r-sm);
+      padding: 8px 12px; font-size: 0.82rem; font-family: var(--font-sans);
+      outline: none; transition: border-color .15s;
+      flex: 1; min-width: 150px;
+    }
+    .controls input:focus, .controls select:focus { border-color: var(--accent); }
+    .controls select option { background: var(--surface2); }
+
+    /* task grid */
+    .task-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+    .task-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r-md); padding: 1.2rem 1.4rem;
+      display: flex; flex-direction: column;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+    }
+    .task-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+      border-color: var(--accent);
+    }
+    .task-card h3 {
+      font-size: 0.95rem; font-weight: 600; color: var(--ink);
+      margin: 0.6rem 0 0.4rem;
+    }
+    .task-card .task-desc {
+      font-size: 0.8rem; color: var(--ink-2); line-height: 1.55;
+      flex-grow: 1; margin-bottom: 1rem;
+    }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 0.7rem; }
+    .tag {
+      font-size: 0.67rem; padding: 2px 8px; border-radius: 99px;
+      font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .tag.Easy   { background: var(--easy-bg);   color: var(--easy); }
+    .tag.Med    { background: var(--med-bg);    color: var(--med); }
+    .tag.Hard   { background: var(--hard-bg);   color: var(--hard); }
+    .tag.Expert { background: var(--expert-bg); color: var(--purple); }
+    .tag.Cat    { background: var(--blue-dim);  color: var(--blue); }
+    .tag.Task   { background: var(--surface2);  color: var(--ink-2); border: 1px solid var(--border); }
+
+    .task-meta {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4px 10px; font-size: 0.75rem; color: var(--ink-3);
+      margin-bottom: 1rem;
+    }
+    .task-meta span b { color: var(--ink-2); font-weight: 500; }
+
+    .card-links { display: flex; gap: 8px; padding-top: 0.9rem; border-top: 1px solid var(--border); }
+    .card-link {
+      flex: 1; text-align: center; font-size: 0.75rem; font-weight: 600;
+      padding: 6px 10px; border-radius: var(--r-sm);
+      border: 1px solid var(--border); color: var(--ink-2);
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .card-link:hover {
+      background: var(--accent); border-color: var(--accent);
+      color: #fff; text-decoration: none;
+    }
+
+    /* ─── Leaderboard ───────────────────────────────────────────────── */
+    .lb-filters {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem;
+    }
+    .filter-btn {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em;
+      padding: 5px 14px; border-radius: 99px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--ink-2); cursor: pointer; transition: .15s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--accent); border-color: var(--accent); color: #fff;
+    }
+
+    .table-wrap {
+      overflow-x: auto; border: 1px solid var(--border);
+      border-radius: var(--r-md); box-shadow: var(--shadow);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    thead th {
+      background: var(--surface2); color: var(--ink-2);
+      padding: 10px 12px; text-align: left;
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em;
+      white-space: nowrap; text-transform: uppercase; cursor: pointer;
+      position: sticky; top: 0; border-bottom: 1px solid var(--border);
+      transition: color .15s;
+    }
+    thead th:hover { color: var(--accent); }
+    thead th .sort-icon { opacity: 0.4; margin-left: 3px; }
+    thead th.sorted .sort-icon { opacity: 1; color: var(--accent); }
+
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(46,160,67,0.05); }
+
+    td { padding: 10px 12px; color: var(--ink); white-space: nowrap; }
+    td.model-cell { white-space: normal; min-width: 200px; }
+
+    .model-name { font-weight: 600; font-size: 0.82rem; color: var(--ink); }
+    .model-sub  { font-size: 0.7rem; color: var(--ink-3); }
+
+    /* rank medals */
+    .rank { font-weight: 700; font-family: var(--font-mono); font-size: 0.8rem; }
+    .rank-1 { color: #FFD700; }
+    .rank-2 { color: #C0C0C0; }
+    .rank-3 { color: #CD7F32; }
+
+    /* performance cells */
+    .gap-cell { font-family: var(--font-mono); font-size: 0.78rem; }
+    .gap-above { color: var(--easy); font-weight: 600; }
+    .gap-close  { color: var(--orange); }
+    .gap-behind { color: var(--red-dim); color: var(--ink-3); }
+
+    .score-val { font-family: var(--font-mono); font-weight: 500; }
+
+    /* model type badges */
+    .type-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.04em;
+      padding: 2px 8px; border-radius: 99px;
+    }
+    .type-reasoning { background: rgba(188,140,255,0.12); color: var(--purple); }
+    .type-chat      { background: rgba(56,139,253,0.12); color: var(--blue); }
+
+    .source-badge { font-size: 0.7rem; }
+
+    /* performance bar */
+    .perf-bar-wrap { display: flex; align-items: center; gap: 8px; }
+    .perf-bar {
+      height: 5px; border-radius: 3px;
+      background: var(--accent); flex-shrink: 0;
+      transition: width .3s;
+    }
+
+    /* human row highlight */
+    .human-row { background: rgba(210,153,34,0.06) !important; }
+    .human-row td { border-top: 1px dashed var(--orange); }
+
+    /* ─── Protocol section ──────────────────────────────────────────── */
+    .protocol-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem; margin-top: 1.4rem;
+    }
+    .protocol-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r-md); padding: 1.4rem;
+    }
+    .protocol-card .p-num {
+      display: inline-block; background: var(--accent-dim);
+      color: var(--accent); border-radius: var(--r-sm);
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+      padding: 2px 8px; margin-bottom: 0.7rem; text-transform: uppercase;
+    }
+    .protocol-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .protocol-card ul {
+      list-style: none; font-size: 0.8rem; color: var(--ink-2); line-height: 1.8;
+    }
+    .protocol-card ul li::before { content: '→ '; color: var(--accent); }
+
+    /* ─── Human stats table ─────────────────────────────────────────── */
+    .human-stats-table thead th { text-transform: none; letter-spacing: 0; font-size: 0.72rem; }
+
+    /* ─── Citation box ──────────────────────────────────────────────── */
+    .citation-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r-md); padding: 1.4rem 1.6rem;
+      font-family: var(--font-mono); font-size: 0.78rem;
+      color: var(--ink-2); line-height: 1.8;
+      white-space: pre; overflow-x: auto;
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute; top: 10px; right: 12px;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--ink-2); font-size: 0.7rem; padding: 4px 10px;
+      border-radius: var(--r-sm); cursor: pointer; transition: .15s;
+    }
+    .copy-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* ─── Footer ────────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem; text-align: center;
+      font-size: 0.78rem; color: var(--ink-3);
+      line-height: 1.8;
+    }
+    footer a { color: var(--ink-2); }
+    footer a:hover { color: var(--accent); text-decoration: none; }
+
+    /* ─── Utility ───────────────────────────────────────────────────── */
+    .hidden { display: none !important; }
+    .mt-1 { margin-top: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+
+    /* ─── Responsive ────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 0 1rem; }
+      .nav-links a:not(.nav-pill) { display: none; }
+      .hero { padding: 3rem 1rem 2.5rem; }
+      .section { padding: 2.5rem 1rem; }
+      .hero-stats { gap: 0.8rem; }
+      .stat-pill { padding: 0.7rem 1.2rem; min-width: 85px; }
+      .stat-pill .val { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ NAV ═══════════════════════════════════ -->
+<nav>
+  <div class="nav-brand">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <circle cx="11" cy="11" r="10" stroke="#2ea043" stroke-width="1.5"/>
+      <circle cx="11" cy="5"  r="2.5" fill="#2ea043"/>
+      <circle cx="5"  cy="17" r="2.5" fill="#2ea043"/>
+      <circle cx="17" cy="17" r="2.5" fill="#2ea043"/>
+      <line x1="11" y1="7.5" x2="5"  y2="14.5" stroke="#2ea043" stroke-width="1.2"/>
+      <line x1="11" y1="7.5" x2="17" y2="14.5" stroke="#2ea043" stroke-width="1.2"/>
+      <line x1="5"  y1="17" x2="17" y2="17"    stroke="#2ea043" stroke-width="1.2"/>
+    </svg>
+    GNN<span class="dot">-CB</span>
+  </div>
+  <div class="nav-links">
+    <a href="#overview">Overview</a>
+    <a href="#competitions">Competitions</a>
+    <a href="#protocols">Protocols</a>
+    <a href="#human">Human Results</a>
+    <a href="#leaderboard" class="nav-pill">Leaderboard</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════ HERO ══════════════════════════════════ -->
+<header class="hero">
+  <div class="hero-badge">EMNLP 2026 · Anonymous Submission</div>
+
+  <h1>GNN-CB: A <em>Graph Neural Network</em><br/>Competition Benchmark</h1>
+  <p class="hero-subtitle">
+    The first competition-based benchmark for evaluating both humans and LLMs on
+    executable GNN coding tasks — 18 curated competitions, unified hidden-test
+    evaluation, and reproducible three-protocol assessment.
+  </p>
+
+  <div class="badge-row">
+    <a class="badge" href="https://arxiv.org/abs/XXXX.XXXXX" target="_blank">
+      📄 arXiv Paper
+    </a>
+    <a class="badge" href="https://github.com/basira-lab/gnncb" target="_blank">
+      ⭐ GitHub Repo
+    </a>
+    <a class="badge" href="#leaderboard">
+      🏆 Leaderboard
+    </a>
+    <a class="badge" href="#competitions">
+      🧩 18 Competitions
+    </a>
+    <a class="badge" href="https://opensource.org/licenses/MIT" target="_blank">
+      ⚖️ MIT License
+    </a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-pill"><span class="val">18</span><span class="lbl">Competitions</span></div>
+    <div class="stat-pill"><span class="val">7</span><span class="lbl">Graph Categories</span></div>
+    <div class="stat-pill"><span class="val">9</span><span class="lbl">LLMs Evaluated</span></div>
+    <div class="stat-pill"><span class="val">230+</span><span class="lbl">Human Submissions</span></div>
+    <div class="stat-pill"><span class="val">10+</span><span class="lbl">Domains</span></div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════ OVERVIEW ══════════════════════════════ -->
+<hr class="section-divider" />
+<section class="section" id="overview">
+  <h2 class="section-title"><span class="section-icon">📖</span>Overview</h2>
+  <p class="section-desc">
+    GNN-CB bridges two research directions: LLM code generation benchmarks and graph machine learning benchmarks.
+    Unlike prior work, GNN-CB evaluates <em>full repository-level GNN implementations</em> — not isolated functions or fixed-model performance.
+  </p>
+
+  <div class="findings-grid">
+    <div class="finding-card">
+      <h4>🎯 Near-Human on Easy Tasks</h4>
+      <p>Frontier proprietary reasoning LLMs (Claude Opus 4.7, GPT-5.4 Codex) approach or match human top on well-templated GNN tasks — e.g., Claude Opus 4.7 reaches 0.998 on C08 Liar Nodes (Δ = +0.002 above human top).</p>
+    </div>
+    <div class="finding-card">
+      <h4>📉 Substantial Gap on Hard Tasks</h4>
+      <p>On Medium and Hard competitions, the strongest LLMs trail the best human submission by 0.05–0.40, particularly for tasks requiring domain-specific graph construction, temporal reasoning, or careful handling of class imbalance.</p>
+    </div>
+    <div class="finding-card">
+      <h4>🔀 Consistency, Not Capability</h4>
+      <p>Every evaluated model achieves at least one near-human peak score, yet none sustains that level on average. The Best–Mean gap ranges from 26 pp (frontier reasoning) to 44 pp (open-source chat models).</p>
+    </div>
+    <div class="finding-card">
+      <h4>🤝 Model Complementarity</h4>
+      <p>No single model dominates across all 18 competitions. Kimi k2.6 surpasses human top on C09 GraphFMD (+0.153); GPT-5.4 Codex leads on C13 GTA (+0.036). Ensembling or task-aware routing may be more effective than scaling a single model.</p>
+    </div>
+    <div class="finding-card">
+      <h4>📊 Discriminating Signal</h4>
+      <p>Competition-style, repository-grounded evaluation provides a more informative signal of end-to-end GNN coding ability than isolated-function benchmarks. Wide cross-task variance reveals systematic model weaknesses.</p>
+    </div>
+    <div class="finding-card">
+      <h4>🔬 Living Benchmark</h4>
+      <p>GNN-CB is released as a living benchmark with automated evaluation infrastructure, dynamic leaderboards, and reproducible execution pipelines — supporting continuous comparison of future models and serving as a progressive educational corpus.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ COMPETITIONS ══════════════════════════ -->
+<hr class="section-divider" />
+<section class="section" id="competitions">
+  <h2 class="section-title"><span class="section-icon">🧩</span>Competition Explorer</h2>
+  <p class="section-desc">Browse all 18 GNN-CB competitions. Filter by difficulty, graph category, or task type.</p>
+
+  <div class="controls">
+    <input type="text" id="comp-search" placeholder="Search by name, domain, or dataset…" />
+    <select id="comp-diff">
+      <option value="all">All Difficulties</option>
+      <option value="Easy">Easy</option>
+      <option value="Med">Medium</option>
+      <option value="Hard">Hard</option>
+      <option value="Expert">Expert</option>
+    </select>
+    <select id="comp-cat">
+      <option value="all">All Graph Categories</option>
+      <option value="Homo">Homogeneous</option>
+      <option value="Hetero">Heterogeneous</option>
+      <option value="Spatial">Spatial</option>
+      <option value="Temp">Temporal</option>
+      <option value="Hier">Hierarchical</option>
+      <option value="Gen">Generalization</option>
+      <option value="Mol">Molecular</option>
+    </select>
+    <select id="comp-task">
+      <option value="all">All Task Types</option>
+      <option value="Node">Node Classification</option>
+      <option value="Graph">Graph Classification</option>
+      <option value="Regression">Graph Regression</option>
+      <option value="Link">Link Prediction</option>
+    </select>
+  </div>
+
+  <div class="task-grid" id="task-grid"></div>
+</section>
+
+<!-- ═══════════════════════════ PROTOCOLS ═════════════════════════════ -->
+<hr class="section-divider" />
+<section class="section" id="protocols">
+  <h2 class="section-title"><span class="section-icon">⚙️</span>Evaluation Protocols</h2>
+  <p class="section-desc">Three complementary protocols ensure fair, reproducible, and directly comparable assessment of human and LLM submissions.</p>
+
+  <div class="protocol-grid">
+    <div class="protocol-card">
+      <span class="p-num">Protocol I</span>
+      <h4>Competition Design</h4>
+      <ul>
+        <li>18 independent GNN competitions</li>
+        <li>Standardized repositories and READMEs</li>
+        <li>Hidden test sets, never exposed</li>
+        <li>Automated GitHub Actions scoring</li>
+        <li>Encrypted submission mechanism</li>
+        <li>Live leaderboard updates</li>
+      </ul>
+    </div>
+    <div class="protocol-card">
+      <span class="p-num">Protocol II</span>
+      <h4>Human Evaluation</h4>
+      <ul>
+        <li>GNN-only architectures (no CNN/RNN)</li>
+        <li>3 CPU hours per task budget</li>
+        <li>Fixed random seed (seed=25)</li>
+        <li>≤5 hyperparameter tuning runs</li>
+        <li>1 final submission per competition</li>
+        <li>LLM assistance: low-level only</li>
+      </ul>
+    </div>
+    <div class="protocol-card">
+      <span class="p-num">Protocol III · Non-Agent</span>
+      <h4>LLM Evaluation (API)</h4>
+      <ul>
+        <li>Frozen prompt template (no tuning)</li>
+        <li>5-slot filling from repository</li>
+        <li>Plan-then-code paradigm</li>
+        <li>Bounded repair loop (k ≤ 5)</li>
+        <li>CPU-only execution sandbox</li>
+        <li>Zero-shot, temperature = 0</li>
+      </ul>
+    </div>
+    <div class="protocol-card">
+      <span class="p-num">Protocol III · Agent</span>
+      <h4>LLM Evaluation (Agent)</h4>
+      <ul>
+        <li>Autonomous repository exploration</li>
+        <li>Self-directed code generation</li>
+        <li>Iterative repair without human input</li>
+        <li>Same k ≤ 5 repair budget</li>
+        <li>Identical hidden-test pipeline</li>
+        <li>Claude Code / GPT-5.4 Codex modes</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ HUMAN RESULTS ═════════════════════════ -->
+<hr class="section-divider" />
+<section class="section" id="human">
+  <h2 class="section-title"><span class="section-icon">👥</span>Human Performance</h2>
+  <p class="section-desc">
+    Performance of human participants across all 18 competitions. Each competition had 13–20 participants, all
+    solving tasks under Protocol II constraints. Statistics shown: N = participant count, AVG = mean score, STD = standard deviation, High = best submission, Low = worst submission.
+  </p>
+
+  <div class="table-wrap">
+    <table class="human-stats-table" id="human-table">
+      <thead>
+        <tr>
+          <th onclick="sortHuman(0)">#</th>
+          <th onclick="sortHuman(1)">Competition</th>
+          <th onclick="sortHuman(2)">Difficulty</th>
+          <th onclick="sortHuman(3)">N</th>
+          <th onclick="sortHuman(4)">Metric</th>
+          <th onclick="sortHuman(5)">AVG ↓</th>
+          <th onclick="sortHuman(6)">STD</th>
+          <th onclick="sortHuman(7)">High</th>
+          <th onclick="sortHuman(8)">Low</th>
+          <th>Repos</th>
+        </tr>
+      </thead>
+      <tbody id="human-tbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ LEADERBOARD ═══════════════════════════ -->
+<hr class="section-divider" />
+<section class="section" id="leaderboard">
+  <h2 class="section-title"><span class="section-icon">🏆</span>LLM Leaderboard</h2>
+  <p class="section-desc">
+    Per-model performance across all 18 GNN-CB competitions under frozen plan-then-code prompting with bounded execute-and-repair loops.
+    <strong>Blue ↓</strong> = gap below human top · <strong>Green ↑</strong> = matches or exceeds human top.
+    Scores are on each competition's native metric; lower-is-better losses (MAE, NMAE) are sign-corrected for the gap.
+  </p>
+
+  <div class="lb-filters">
+    <button class="filter-btn active" onclick="filterLB('all', this)">All Models</button>
+    <button class="filter-btn" onclick="filterLB('proprietary_reasoning', this)">Proprietary Reasoning</button>
+    <button class="filter-btn" onclick="filterLB('proprietary_chat', this)">Proprietary Chat</button>
+    <button class="filter-btn" onclick="filterLB('opensource_reasoning', this)">Open-source Reasoning</button>
+    <button class="filter-btn" onclick="filterLB('opensource_chat', this)">Open-source Chat</button>
+  </div>
+
+  <div class="table-wrap">
+    <table id="lb-table">
+      <thead>
+        <tr>
+          <th onclick="sortLB(0)"># <span class="sort-icon">↕</span></th>
+          <th onclick="sortLB(1)">Model <span class="sort-icon">↕</span></th>
+          <th>Type</th>
+          <th>Mode</th>
+          <!-- Easy -->
+          <th onclick="sortLB(4)" title="Real Or Fake! (C03)">C03<br/><span style="font-weight:400;color:var(--easy)">Easy</span></th>
+          <th onclick="sortLB(5)" title="Liar Nodes (C08)">C08<br/><span style="font-weight:400;color:var(--easy)">Easy</span></th>
+          <th onclick="sortLB(6)" title="BrainAge (C14) — MAE">C14<br/><span style="font-weight:400;color:var(--easy)">Easy</span></th>
+          <!-- Medium -->
+          <th onclick="sortLB(7)"  title="PROVEN-GNN (C01)">C01<br/><span style="font-weight:400;color:var(--med)">Med</span></th>
+          <th onclick="sortLB(8)"  title="GNN_BACE (C05)">C05<br/><span style="font-weight:400;color:var(--med)">Med</span></th>
+          <th onclick="sortLB(9)"  title="GRAPE (C07)">C07<br/><span style="font-weight:400;color:var(--med)">Med</span></th>
+          <th onclick="sortLB(10)" title="GraphFMD (C09)">C09<br/><span style="font-weight:400;color:var(--med)">Med</span></th>
+          <th onclick="sortLB(11)" title="NetLinkArena (C10)">C10<br/><span style="font-weight:400;color:var(--med)">Med</span></th>
+          <th onclick="sortLB(12)" title="GNN-CoRA (C12)">C12<br/><span style="font-weight:400;color:var(--med)">Med</span></th>
+          <th onclick="sortLB(13)" title="OctoNode Cup (C15)">C15<br/><span style="font-weight:400;color:var(--med)">Med</span></th>
+          <th onclick="sortLB(14)" title="Graph4ASD (C16)">C16<br/><span style="font-weight:400;color:var(--med)">Med</span></th>
+          <!-- Hard -->
+          <th onclick="sortLB(15)" title="CGCC (C02)">C02<br/><span style="font-weight:400;color:var(--hard)">Hard</span></th>
+          <th onclick="sortLB(16)" title="GLIMPS-GNN (C04)">C04<br/><span style="font-weight:400;color:var(--hard)">Hard</span></th>
+          <th onclick="sortLB(17)" title="DiaGraph (C06)">C06<br/><span style="font-weight:400;color:var(--hard)">Hard</span></th>
+          <th onclick="sortLB(18)" title="GTA (C13)">C13<br/><span style="font-weight:400;color:var(--hard)">Hard</span></th>
+          <th onclick="sortLB(19)" title="Mix2Print (C17) — NMAE">C17<br/><span style="font-weight:400;color:var(--hard)">Hard</span></th>
+          <th onclick="sortLB(20)" title="THInC (C18)">C18<br/><span style="font-weight:400;color:var(--hard)">Hard</span></th>
+          <th onclick="sortLB(21)">Mean Gap ↓ <span class="sort-icon">↕</span></th>
+        </tr>
+      </thead>
+      <tbody id="lb-tbody"></tbody>
+    </table>
+  </div>
+
+  <p class="mt-2" style="font-size:0.75rem;color:var(--ink-3);">
+    † Agent-based mode (autonomous repository exploration). All other models evaluated in API non-agent mode.
+    Default max tokens: 10,000; temperature: 0. Score shown is the raw competition-metric value.
+    Gap = score − human top; sign-corrected for lower-is-better metrics.
+  </p>
+</section>
+
+<!-- ═══════════════════════════ CITATION ══════════════════════════════ -->
+<hr class="section-divider" />
+<section class="section" id="citation">
+  <h2 class="section-title"><span class="section-icon">📚</span>Citation</h2>
+  <p class="section-desc">If you use GNN-CB in your research, please cite:</p>
+  <div class="citation-box" id="citation-text">@inproceedings{gnncb2026,
+  title     = {GNN-CB: A Graph Neural Network Competition Benchmark
+               for Human and LLM Evaluation},
+  author    = {Anonymous},
+  booktitle = {Proceedings of the 2026 Conference on Empirical
+               Methods in Natural Language Processing (EMNLP)},
+  year      = {2026}
+}</div>
+  <button class="copy-btn" onclick="copyCitation()">Copy BibTeX</button>
+</section>
+
+<!-- ═══════════════════════════ FOOTER ════════════════════════════════ -->
+<footer>
+  <p>
+    <strong>GNN-CB</strong> · Basira Lab · 2026 ·
+    <a href="https://github.com/basira-lab/gnncb" target="_blank">GitHub</a> ·
+    <a href="https://arxiv.org/abs/XXXX.XXXXX" target="_blank">arXiv</a> ·
+    <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>
+  </p>
+  <p style="margin-top:6px;">
+    Built with the same open-science spirit as
+    <a href="https://ineqmath.github.io/" target="_blank">IneqMath</a> and
+    <a href="https://paperswithcode.com" target="_blank">Papers with Code</a>.
+  </p>
+</footer>
+
+<!-- ═══════════════════════════ DATA & LOGIC ══════════════════════════ -->
+<script>
+/* ──────────── Competition data ─────────────────────────────────────── */
+const COMPETITIONS = [
+  { id:"C01", name:"PROVEN-GNN",     diff:"Med",    cat:"Hetero",  task:"Graph", domain:"Cybersecurity", metric:"Macro-F1", dataset:"DiverseVul",     n:17, avg:0.792, std:0.101, high:0.900, low:0.435,
+    desc:"Graph classification on code-property graphs (AST/CFG/PDG) for vulnerability detection.",
+    repo:"https://github.com/abdksm/PROVEN-GNN/",  lb:"https://abdksm.github.io/PROVEN-GNN/docs/leaderboard.html" },
+  { id:"C02", name:"CGCC",           diff:"Hard",   cat:"Homo",    task:"Graph", domain:"Urban",         metric:"Macro-F1", dataset:"OpenStreetMap",  n:17, avg:0.383, std:0.086, high:0.537, low:0.205,
+    desc:"Graph classification of city street-network layouts (organic / grid / hybrid).",
+    repo:"https://github.com/Murad-Hossen/CGCC",   lb:"https://murad-hossen.github.io/CGCC/leaderboard/index.html" },
+  { id:"C03", name:"Real Or Fake!",  diff:"Easy",   cat:"Hier",    task:"Graph", domain:"Social",        metric:"Binary F1",dataset:"GossipCop",      n:15, avg:0.945, std:0.053, high:0.980, low:0.767,
+    desc:"Binary graph classification for fake news detection from Twitter propagation graphs.",
+    repo:"https://github.com/TugaAhmed/Real_Or_Fake/tree/main", lb:"https://tugaahmed.github.io/Real_Or_Fake/leaderboard.html" },
+  { id:"C04", name:"GLIMPS-GNN",     diff:"Hard",   cat:"Gen",     task:"Node", domain:"Biomedical",    metric:"F1",       dataset:"GEO: GSE192902", n:16, avg:0.389, std:0.094, high:0.600, low:0.280,
+    desc:"Inductive cfRNA → placenta preeclampsia classification under cross-domain distribution shift.",
+    repo:"https://github.com/Mubarraqqq/gnn-challenge", lb:"https://mubarraqqq.github.io/gnn-challenge/leaderboard.html" },
+  { id:"C05", name:"GNN_BACE",       diff:"Med",    cat:"Mol",     task:"Graph", domain:"Medical",       metric:"Macro-F1", dataset:"BACE",           n:14, avg:0.496, std:0.088, high:0.674, low:0.391,
+    desc:"Molecular graph classification for BACE-1 inhibition prediction — pure representation learning, no molecular descriptors.",
+    repo:"https://github.com/hadilaff/GNN_BACE_Challenge", lb:"https://hadilaff.github.io/GNN_BACE_Challenge/leaderboard.html" },
+  { id:"C06", name:"DiaGraph",       diff:"Hard",   cat:"Homo",    task:"Node", domain:"Medical",       metric:"Macro-F1", dataset:"Kaggle Diabetes",n:15, avg:0.570, std:0.125, high:0.822, low:0.477,
+    desc:"Robust node classification for diabetes prediction on noisy, imbalanced patient similarity graphs.",
+    repo:"https://github.com/mahatrabelsi1/GNN-MVP-Node-Classification-Under-Noise", lb:"https://mahatrabelsi1.github.io/GNN-MVP-Node-Classification-Under-Noise/leaderboard.html" },
+  { id:"C07", name:"GRAPE",          diff:"Med",    cat:"Spatial", task:"Graph", domain:"Medical",       metric:"Macro-F1", dataset:"DRIVE/STARE/HRF",n:16, avg:0.707, std:0.131, high:0.830, low:0.400,
+    desc:"Diabetic retinopathy detection from retinal vessel graphs; models must recover vascular topology without handcrafted descriptors.",
+    repo:"https://github.com/Muhammad0isah/GRAPE", lb:"https://muhammad0isah.github.io/GRAPE/leaderboard.html" },
+  { id:"C08", name:"Liar Nodes",     diff:"Easy",   cat:"Homo",    task:"Node", domain:"Biomedical",    metric:"Accuracy", dataset:"CancerSCEM",     n:17, avg:0.756, std:0.212, high:0.996, low:0.407,
+    desc:"Transductive node classification for cancer-cell identification; node embeddings are intentionally corrupted to simulate biological ambiguity.",
+    repo:"https://github.com/NoorMajdoub/Challenge", lb:"https://github.com/NoorMajdoub/Challenge" },
+  { id:"C09", name:"GraphFMD",       diff:"Med",    cat:"Temp",    task:"Node", domain:"Finance",       metric:"Macro-F1", dataset:"Elliptic",       n:18, avg:0.706, std:0.271, high:0.891, low:0.403,
+    desc:"Temporal inductive node classification on Bitcoin transaction graphs; illicit transactions < 3% of nodes.",
+    repo:"https://github.com/faranbutt/GraphFMD", lb:"https://faranbutt.github.io/GraphFMD/" },
+  { id:"C10", name:"NetLinkArena",   diff:"Med",    cat:"Homo",    task:"Link", domain:"Academic",      metric:"AUC-ROC",  dataset:"CiteSeer",       n:17, avg:0.706, std:0.271, high:0.891, low:0.508,
+    desc:"Link prediction on a perturbed scientific citation graph; models must learn latent representations from topology and attributes alone.",
+    repo:"https://github.com/ignatiusbalayo/NetLinkArena", lb:"https://ignatiusbalayo.github.io/NetLinkArena/leaderboard.html" },
+  { id:"C11", name:"PARK-GNN",       diff:"Hard",   cat:"Homo",    task:"Node", domain:"Medical",       metric:"Macro-F1", dataset:"UCI Parkinson's",n:14, avg:0.773, std:0.116, high:0.933, low:0.548,
+    desc:"Node classification for Parkinson's detection from acoustic voice recordings; KNN graph on 22-dimensional acoustic features.",
+    repo:"https://github.com/AiIkram/gnn-parkinsons-challenge", lb:"https://aiikram.github.io/gnn-parkinsons-challenge/leaderboard.html" },
+  { id:"C12", name:"GNN-CoRA",       diff:"Med",    cat:"Homo",    task:"Node", domain:"Academic",      metric:"Accuracy", dataset:"Cora",           n:14, avg:0.551, std:0.196, high:0.742, low:0.153,
+    desc:"Node classification on a noisy citation network; Gaussian noise injected into 1433-dimensional bag-of-words features.",
+    repo:"https://github.com/tasneem-mselim/GNN_CoRA", lb:"https://tasneem-mselim.github.io/GNN_CoRA/final_leaderboard.html" },
+  { id:"C13", name:"GTA",            diff:"Hard",   cat:"Gen",     task:"Graph", domain:"Bioinformatics",metric:"Macro-F1", dataset:"MUTAG",          n:16, avg:0.582, std:0.163, high:0.790, low:0.250,
+    desc:"Binary graph classification of molecular mutagenicity under clean and feature-perturbed conditions; robustness gap is a secondary metric.",
+    repo:"https://github.com/idrees11/GTA-Graph-Topology-Ablation", lb:"https://idrees11.github.io/GTA-Graph-Topology-Ablation/index.html" },
+  { id:"C14", name:"BrainAge",       diff:"Easy",   cat:"Homo",    task:"Regression", domain:"Neuroimaging", metric:"MAE", dataset:"OASIS-3",       n:14, avg:6.531, std:1.474, high:10.638, low:4.984,
+    desc:"Graph regression for chronological age prediction from structural brain connectomes; 68-node Desikan-Killiany atlas.",
+    repo:"https://github.com/bjayadikary/brain-age-gnn-oasis3", lb:"https://bjayadikary.github.io/brain-age-gnn-oasis3/leaderboard.html" },
+  { id:"C15", name:"OctoNode Cup",   diff:"Med",    cat:"Homo",    task:"Node", domain:"Social",        metric:"Macro-F1", dataset:"GitHub Social",  n:15, avg:0.672, std:0.151, high:0.793, low:0.211,
+    desc:"Binary node classification of GitHub users (Web vs ML developers) on a 37.7K-node social graph.",
+    repo:"https://github.com/El-Ikram/OctoNode_Cup", lb:"https://el-ikram.github.io/OctoNode_Cup/leaderboard.html" },
+  { id:"C16", name:"Graph4ASD",      diff:"Med",    cat:"Homo",    task:"Graph", domain:"Neuroimaging", metric:"Macro-F1", dataset:"ABIDE",          n:14, avg:0.513, std:0.082, high:0.627, low:0.389,
+    desc:"Binary classification of brain connectivity graphs (ASD vs typical control); node features restricted to identity descriptors.",
+    repo:"https://github.com/RosePY/Graph4ASD-Challenge", lb:"https://rosepy.github.io/Graph4ASD-Challenge/docs/leaderboard.html" },
+  { id:"C17", name:"Mix2Print",      diff:"Hard",   cat:"Homo",    task:"Regression", domain:"Bioprinting", metric:"NMAE", dataset:"CECT",          n:13, avg:0.08, std:0.02, high:0.147, low:0.069,
+    desc:"Graph regression for 3D bioprinting parameter prediction (pressure, temperature, speed) from bioink formulation graphs.",
+    repo:"https://github.com/VinitSingroha/Mix2Print", lb:"https://vinitsingroha.github.io/Mix2Print/leaderboard.html" },
+  { id:"C18", name:"THInC",          diff:"Hard",   cat:"Spatial", task:"Node", domain:"Biomedical",    metric:"Macro-F1", dataset:"NuCLS",          n:14, avg:0.490, std:0.056, high:0.565, low:0.354,
+    desc:"Inductive cell-type classification on histopathology spatial graphs; 4-class prediction generalized to entirely unseen patients.",
+    repo:"https://github.com/emmakowu3579-ui/inductive-class-challenge", lb:"https://emmakowu3579-ui.github.io/inductive-class-challenge/" },
+];
+
+/* ──────────── LLM leaderboard data ─────────────────────────────────── */
+// Scores: [C03, C08, C14, C01, C05, C07, C09, C10, C12, C15, C16, C02, C04, C06, C13, C17, C18]
+// meanGap: average |gap to human top| across competitions (lower=better, sign-corrected)
+const LLM_MODELS = [
+  { name:"Claude Opus 4.7†", sub:"Anthropic · Agent",      family:"proprietary_reasoning", mode:"Agent",
+    scores:[0.976,0.998,5.504,0.781,0.554,0.830,0.762,0.696,0.551,0.746,0.608,0.327,0.440,0.769,0.791,0.069,0.572], meanGap:0.148 },
+  { name:"Gemini 2.5 Pro",   sub:"Google DeepMind · Non-Agent", family:"proprietary_reasoning", mode:"Non-Agent",
+    scores:[0.936,0.927,5.524,0.755,0.619,0.830,0.836,0.875,0.648,0.541,0.488,0.407,0.290,0.488,0.657,0.093,0.360], meanGap:0.179 },
+  { name:"GPT-5.4 Codex†",  sub:"OpenAI · Agent",          family:"proprietary_reasoning", mode:"Agent",
+    scores:[0.707,0.889,5.847,0.503,0.534,0.444,0.776,0.839,0.740,0.718,0.457,0.362,0.520,0.725,0.835,0.074,0.486], meanGap:0.182 },
+  { name:"Claude Opus 4.6",  sub:"Anthropic · Non-Agent",   family:"proprietary_chat",    mode:"Non-Agent",
+    scores:[0.954,0.983,5.668,0.854,0.452,0.830,0.818,0.781,0.816,0.654,0.554,0.407,0.280,0.783,0.693,0.072,0.542], meanGap:0.163 },
+  { name:"Gemini-3 Flash",   sub:"Google DeepMind · Non-Agent", family:"proprietary_chat",  mode:"Non-Agent",
+    scores:[0.976,0.988,5.710,0.811,0.532,0.762,0.780,0.683,0.697,0.749,0.515,0.335,0.380,0.495,0.595,0.069,0.479], meanGap:0.174 },
+  { name:"DeepSeek-v4 Pro",  sub:"DeepSeek-AI · Non-Agent", family:"opensource_reasoning",mode:"Non-Agent",
+    scores:[0.952,0.730,5.512,0.794,0.535,0.830,0.781,0.665,0.700,0.542,0.329,0.156,0.300,0.744,0.397,0.067,0.431], meanGap:0.221 },
+  { name:"Kimi k2.6",        sub:"Moonshot AI · Non-Agent", family:"opensource_chat",     mode:"Non-Agent",
+    scores:[0.964,0.429,6.139,0.484,0.521,0.830,0.959,0.714,0.705,0.704,0.640,0.430,0.480,0.493,0.791,0.064,0.572], meanGap:0.198 },
+  { name:"Qwen2.5-Coder 32B",sub:"Alibaba Cloud · Non-Agent",family:"opensource_chat",   mode:"Non-Agent",
+    scores:[0.966,0.666,9.502,0.771,0.391,0.400,0.698,0.548,0.800,0.525,0.441,0.196,0.310,0.502,0.255,0.117,0.384], meanGap:0.265 },
+  { name:"Llama-3.3 70B",    sub:"Meta AI · Non-Agent",     family:"opensource_chat",     mode:"Non-Agent",
+    scores:[0.794,0.662,7.449,0.727,0.391,0.400,0.728,0.500,0.659,0.429,0.394,0.467,0.380,0.329,0.638,0.070,0.376], meanGap:0.299 },
+];
+
+const HUMAN_TOP = [0.980,0.996,4.984,0.900,0.674,0.830,0.806,0.891,0.742,0.793,0.627,0.537,0.600,0.822,0.799,0.069,0.565];
+const HUMAN_MEAN_GAP = 0; // reference
+
+/* ──────────── Render tasks ─────────────────────────────────────────── */
+function renderTasks(data) {
+  const grid = document.getElementById('task-grid');
+  grid.innerHTML = '';
+  data.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'task-card';
+    el.dataset.name = (c.name + c.domain + c.dataset + c.cat + c.task).toLowerCase();
+    el.dataset.diff = c.diff;
+    el.dataset.cat  = c.cat;
+    el.dataset.task = c.task;
+
+    const catLabel = {Homo:'Homogeneous',Hetero:'Heterogeneous',Spatial:'Spatial',
+      Temp:'Temporal',Hier:'Hierarchical',Gen:'Generalization',Mol:'Molecular'}[c.cat] || c.cat;
+    const diffLabel = {Med:'Medium'}[c.diff] || c.diff;
+    const taskLabel = {Node:'Node Classif.',Graph:'Graph Classif.',
+      Link:'Link Pred.',Regression:'Graph Regression'}[c.task] || c.task;
+
+    el.innerHTML = `
+      <div class="tag-row">
+        <span class="tag ${c.diff}">${diffLabel}</span>
+        <span class="tag Cat">${catLabel}</span>
+        <span class="tag Task">${taskLabel}</span>
+      </div>
+      <h3><span style="color:var(--ink-3);font-family:var(--font-mono);font-size:0.78rem;">${c.id}</span> ${c.name}</h3>
+      <p class="task-desc">${c.desc}</p>
+      <div class="task-meta">
+        <span><b>Metric:</b> ${c.metric}</span>
+        <span><b>Domain:</b> ${c.domain}</span>
+        <span style="grid-column:span 2"><b>Dataset:</b> ${c.dataset}</span>
+        <span><b>N (human):</b> ${c.n}</span>
+        <span><b>Avg score:</b> ${typeof c.avg === 'number' && c.avg > 2 ? c.avg.toFixed(2) : c.avg.toFixed(3)}</span>
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="${c.repo}" target="_blank">Repository</a>
+        <a class="card-link" href="${c.lb}"   target="_blank">Leaderboard</a>
+      </div>`;
+    grid.appendChild(el);
+  });
+}
+
+function filterTasks() {
+  const q    = document.getElementById('comp-search').value.toLowerCase();
+  const diff = document.getElementById('comp-diff').value;
+  const cat  = document.getElementById('comp-cat').value;
+  const task = document.getElementById('comp-task').value;
+  document.querySelectorAll('.task-card').forEach(el => {
+    const ok =
+      el.dataset.name.includes(q) &&
+      (diff === 'all' || el.dataset.diff === diff) &&
+      (cat  === 'all' || el.dataset.cat  === cat)  &&
+      (task === 'all' || el.dataset.task === task);
+    el.style.display = ok ? '' : 'none';
+  });
+}
+
+document.getElementById('comp-search').addEventListener('input', filterTasks);
+document.getElementById('comp-diff').addEventListener('change', filterTasks);
+document.getElementById('comp-cat').addEventListener('change', filterTasks);
+document.getElementById('comp-task').addEventListener('change', filterTasks);
+
+renderTasks(COMPETITIONS);
+
+/* ──────────── Render human table ───────────────────────────────────── */
+function renderHuman() {
+  const tbody = document.getElementById('human-tbody');
+  COMPETITIONS.forEach((c, i) => {
+    const tr = document.createElement('tr');
+    const diffLabel = {Med:'Medium'}[c.diff] || c.diff;
+    const isReg = c.metric === 'MAE' || c.metric === 'NMAE';
+    tr.innerHTML = `
+      <td><span class="rank">${c.id}</span></td>
+      <td class="model-cell"><span class="model-name">${c.name}</span><br/><span class="model-sub">${c.domain} · ${c.dataset}</span></td>
+      <td><span class="tag ${c.diff}" style="font-size:0.65rem;">${diffLabel}</span></td>
+      <td>${c.n}</td>
+      <td style="font-family:var(--font-mono);font-size:0.75rem;">${c.metric}</td>
+      <td class="score-val">${c.avg.toFixed(isReg?2:3)}</td>
+      <td class="score-val" style="color:var(--ink-3)">${c.std.toFixed(isReg?2:3)}</td>
+      <td class="score-val" style="color:var(--easy)">${c.high.toFixed(isReg?2:3)}</td>
+      <td class="score-val" style="color:var(--red)">${c.low.toFixed(isReg?2:3)}</td>
+      <td><a href="${c.lb}" target="_blank" style="font-size:0.75rem;color:var(--blue)">→ View</a></td>`;
+    tbody.appendChild(tr);
+  });
+}
+renderHuman();
+
+let humanSortAsc = true;
+function sortHuman(col) {
+  const tbody = document.getElementById('human-tbody');
+  const rows  = Array.from(tbody.rows);
+  rows.sort((a, b) => {
+    const va = a.cells[col].innerText.trim();
+    const vb = b.cells[col].innerText.trim();
+    const na = parseFloat(va.replace(/[^\d.-]/g, ''));
+    if (!isNaN(na) && !isNaN(parseFloat(vb.replace(/[^\d.-]/g, '')))) {
+      return humanSortAsc ? na - parseFloat(vb) : parseFloat(vb) - na;
+    }
+    return humanSortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+  });
+  rows.forEach(r => tbody.appendChild(r));
+  humanSortAsc = !humanSortAsc;
+}
+
+/* ──────────── Render LLM leaderboard ─────────────────────────────── */
+// Indices of scores array → [C03,C08,C14,C01,C05,C07,C09,C10,C12,C15,C16,C02,C04,C06,C13,C17,C18]
+// HUMAN_TOP same order
+const LOWER_BETTER_IDX = new Set([2, 15]); // C14(MAE), C17(NMAE)
+
+function fmtScore(val, idx, htop) {
+  if (val === null || val === undefined) return '<span style="color:var(--ink-3)">—</span>';
+  const isLB = LOWER_BETTER_IDX.has(idx);
+  const gap = isLB ? htop - val : val - htop; // positive = above human
+  const disp = (idx === 2 || idx === 15) ? val.toFixed(2) : val.toFixed(3);
+  let cls, sym;
+  if (gap >= -0.001) { cls = 'gap-above'; sym = '↑'; }
+  else if (gap >= -0.05) { cls = 'gap-close'; sym = '↓'; }
+  else { cls = 'gap-behind'; sym = '↓'; }
+  const gapStr = Math.abs(gap).toFixed(3);
+  return `<span class="score-val">${disp}</span><br/><span class="gap-cell ${cls}" style="font-size:0.65rem;">${sym}${gapStr}</span>`;
+}
+
+function renderLB(models) {
+  const tbody = document.getElementById('lb-tbody');
+  tbody.innerHTML = '';
+
+  // Sort by meanGap ascending by default
+  const sorted = [...models].sort((a,b) => a.meanGap - b.meanGap);
+
+  sorted.forEach((m, i) => {
+    const tr = document.createElement('tr');
+    tr.dataset.family = m.family;
+
+    const typeLabel = m.family.includes('reasoning') ? 'Reasoning' : 'Chat';
+    const typeCls   = m.family.includes('reasoning') ? 'type-reasoning' : 'type-chat';
+    const sourceLabel = m.family.includes('opensource') ? '🌐' : '🔒';
+
+    let rankStr;
+    if (i === 0) rankStr = '<span class="rank rank-1">🥇 1</span>';
+    else if (i === 1) rankStr = '<span class="rank rank-2">🥈 2</span>';
+    else if (i === 2) rankStr = '<span class="rank rank-3">🥉 3</span>';
+    else rankStr = `<span class="rank">${i+1}</span>`;
+
+    const scoreCells = m.scores.map((s, si) => `<td>${fmtScore(s, si, HUMAN_TOP[si])}</td>`).join('');
+
+    tr.innerHTML = `
+      <td>${rankStr}</td>
+      <td class="model-cell">
+        <span class="model-name">${m.name}</span><br/>
+        <span class="model-sub">${m.sub} · ${sourceLabel}</span>
+      </td>
+      <td><span class="type-badge ${typeCls}">${typeLabel}</span></td>
+      <td style="font-size:0.75rem;color:var(--ink-2);">${m.mode}</td>
+      ${scoreCells}
+      <td><span class="score-val" style="font-weight:700;">${m.meanGap.toFixed(3)}</span></td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Human reference row
+  const htr = document.createElement('tr');
+  htr.className = 'human-row';
+  const hScores = HUMAN_TOP.map((v, i) =>
+    `<td><span class="score-val" style="color:var(--orange);">${(i===2||i===15)?v.toFixed(2):v.toFixed(3)}</span></td>`
+  ).join('');
+  htr.innerHTML = `
+    <td><span class="rank" style="color:var(--orange);">H</span></td>
+    <td class="model-cell"><span class="model-name" style="color:var(--orange);">Human Top</span><br/><span class="model-sub">Best human submission per competition</span></td>
+    <td colspan="2"><span class="type-badge" style="background:rgba(210,153,34,0.12);color:var(--orange);">Human</span></td>
+    ${hScores}
+    <td><span class="score-val" style="color:var(--orange);">0.000</span></td>`;
+  tbody.appendChild(htr);
+}
+
+renderLB(LLM_MODELS);
+
+let lbFilter = 'all';
+function filterLB(f, btn) {
+  lbFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const tbody = document.getElementById('lb-tbody');
+  Array.from(tbody.rows).forEach(row => {
+    if (row.classList.contains('human-row')) { row.style.display = ''; return; }
+    row.style.display = (f === 'all' || row.dataset.family === f) ? '' : 'none';
+  });
+}
+
+let lbSortCol = 21, lbSortAsc = true;
+function sortLB(col) {
+  const tbody = document.getElementById('lb-tbody');
+  const rows  = Array.from(tbody.rows).filter(r => !r.classList.contains('human-row'));
+  lbSortAsc = (lbSortCol === col) ? !lbSortAsc : true;
+  lbSortCol = col;
+
+  rows.sort((a, b) => {
+    const getText = r => r.cells[col]?.querySelector('.score-val')?.innerText.trim() || r.cells[col]?.innerText.trim() || '';
+    const va = parseFloat(getText(a).replace(/[^\d.-]/g, ''));
+    const vb = parseFloat(getText(b).replace(/[^\d.-]/g, ''));
+    if (!isNaN(va) && !isNaN(vb)) return lbSortAsc ? va - vb : vb - va;
+    return lbSortAsc ? getText(a).localeCompare(getText(b)) : getText(b).localeCompare(getText(a));
+  });
+
+  const hrow = tbody.querySelector('.human-row');
+  rows.forEach(r => tbody.appendChild(r));
+  if (hrow) tbody.appendChild(hrow);
+
+  // update sort icon highlights
+  document.querySelectorAll('#lb-table thead th').forEach((th, i) => {
+    th.classList.toggle('sorted', i === col);
+  });
+}
+
+/* ──────────── Citation copy ─────────────────────────────────────────── */
+function copyCitation() {
+  const txt = document.getElementById('citation-text').innerText;
+  navigator.clipboard.writeText(txt).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = 'Copy BibTeX', 2000);
+  });
+}
+
+/* ──────────── Active nav link on scroll ─────────────────────────────── */
+const sections = ['overview','competitions','protocols','human','leaderboard'];
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.nav-links a').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
+      });
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) observer.observe(el);
+});
+</script>
+</body>
+</html>
