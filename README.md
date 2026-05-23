@@ -6,6 +6,7 @@
 
 
 Welcome to the official repository for the paper **"GNN-CB: A Graph Neural Network Competition Benchmark for Human and LLM Evaluation"**. GNN-CB is the **first competition-based benchmark** designed to evaluate both humans and large language models (LLMs) on graph neural network (GNN) coding tasks under controlled, reproducible competition settings.
+(https://basira-lab.github.io/gnncb/#leaderboard).
 
 
 ---
@@ -65,8 +66,6 @@ Each competition repository includes: task README, dataset files, submission spe
 
 ## 🏆 Leaderboard
 
-The interactive leaderboard is available at **[basira-lab.github.io/gnncb/#leaderboard](https://basira-lab.github.io/gnncb/#leaderboard)**.
-
 Below is a summary of LLM performance vs. human top across all 18 competitions:
 
 | Model | Family | Mode | Easy (avg) | Med (avg) | Hard (avg) | Mean Gap ↓ |
@@ -99,8 +98,6 @@ Human participants solve each competition under the following standardized const
 | **LLM assistance** | Low-level utility only; no task-specific context |
 
 Each participant maintains a documentation log recording: hyperparameter search strategy, all configurations attempted, training time, hardware specs, and any LLM-assisted snippets. Prediction files are encrypted locally before upload via pull-request to prevent information leakage.
-
-Human performance statistics (mean, standard deviation, best, worst) across all 18 competitions are available in Table 2 of the paper and on the [leaderboard page](https://basira-lab.github.io/gnncb/#leaderboard).
 
 ---
 
