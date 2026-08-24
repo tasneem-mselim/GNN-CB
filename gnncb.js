@@ -7646,7 +7646,7 @@ const REFLECTIONS = [
     text: "G4RS taught me much more than GNNs and research. It challenged me to think differently, learn from people with very different backgrounds, and grow more confident in my own way of doing research💡. More than anything, it reminded me that research is not only about what you build, but also about the people you learn from and the journey you share along the way." },
   { name: "Tuga Yousif",           github: "https://github.com/TugaAhmed", image: "fig/authors/Tuga.jpg",
     text: "Through G4RS, I grew both personally and professionally while connecting with inspiring individuals. Overall, it was an amazing journey." },
-  { name: "Mohammad Idrees Bhat",  github: "https://github.com/idrees11", image: "fig/authors/Mohammad_idrees_Bhat.PNG",
+  { name: "Mohammad Idrees Bhat",  github: "https://github.com/idrees11", image: "fig/authors/Mohammad_idrees_Bhat.png",
     text: "It was good to collaborate with the people all around the Globe." },
   { name: "Maha Trabelsi",         github: "https://github.com/mahatrabelsi1", image: "fig/authors/Maha_trabelsi.PNG",
     text: "My experience in the G4RS programme was truly special. As a bachelor's student, I had little knowledge of the AI and deep learning world🌍, so joining a programme surrounded by people with expertise in these fields was challenging at first. However, thanks to Dr. Islem's guidance, learning the basics of GNNs became much easier. Being able to contribute to a scientific paper was also a huge opportunity and a valuable addition to my experience." },
