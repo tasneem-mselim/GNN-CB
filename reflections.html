@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GNN-CB: Reflections</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      var t = localStorage.getItem('gnncb-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="stylesheet" href="gnncb.css" />
+  <script>
+    if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+    window.addEventListener('load', () => { window.scrollTo(0, 0); });
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <circle cx="11" cy="11" r="10" stroke="#2ea043" stroke-width="1.5"/>
+      <circle cx="11" cy="5"  r="2.5" fill="#2ea043"/>
+      <circle cx="5"  cy="17" r="2.5" fill="#2ea043"/>
+      <circle cx="17" cy="17" r="2.5" fill="#2ea043"/>
+      <line x1="11" y1="7.5" x2="5"  y2="14.5" stroke="#2ea043" stroke-width="1.2"/>
+      <line x1="11" y1="7.5" x2="17" y2="14.5" stroke="#2ea043" stroke-width="1.2"/>
+      <line x1="5"  y1="17" x2="17" y2="17"    stroke="#2ea043" stroke-width="1.2"/>
+    </svg>
+    GNN<span class="dot">-CB</span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html#introduction">Introduction</a>
+    <a href="index.html#benchmark">Benchmark</a>
+    <a href="index.html#competitions">Competitions</a>
+    <a href="index.html#results">Results</a>
+    <a href="index.html#leaderboard" class="nav-pill">🏆 Leaderboard</a>
+    <a href="reflections.html">🌟 Reflections</a>
+    <button type="button" id="theme-toggle" class="theme-toggle" aria-pressed="true" title="Switch to bright mode">
+      <span class="label-light">☀ Bright</span>
+      <span class="label-dark">🌙 Dark</span>
+    </button>
+  </div>
+</nav>
+
+<header class="hero" style="padding-bottom: 2rem;">
+  <p class="rise-tagline">We do not rise alone<br>we rise <span class="dynamic-word">TOGETHER</span></p>
+  <p class="hero-subtitle">
+    Here is our success story of G4RS. <br>
+    It began as an idea to spread knowledge, create opportunities,
+    and empower students from low- and middle-income countries became a journey that led to an
+    A* publication at EMNLP 2026 Main Conference.
+  </p>
+</header>
+
+<section class="section" id="journey-gallery">
+  <h1></h1>
+  <p class="journey-caption">Glimpses of the Journey ✨</p>
+  <div class="journey-carousel">
+    <div class="journey-track">
+      <img src="fig/Journey/1.png" alt="Journey 1" />
+      <img src="fig/Journey/2.png" alt="Journey 2" />
+      <img src="fig/Journey/3.png" alt="Journey 3" />
+      <img src="fig/Journey/4.png" alt="Journey 4" />
+      <img src="fig/Journey/1.png" alt="Journey 1" />
+      <img src="fig/Journey/2.png" alt="Journey 2" />
+      <img src="fig/Journey/3.png" alt="Journey 3" />
+      <img src="fig/Journey/4.png" alt="Journey 4" />
+    </div>
+  </div>
+</section>
+
+
+<hr class="section-divider" />
+<p class="journey-caption">It wasn't easy <br> But it was worth it. ✨</p>
+
+<section class="section" id="reflections">
+  <div class="reflections-grid" id="reflections-grid"></div>
+</section>
+
+<section class="section" id="reflections">
+  <div class="reflections-grid" id="reflections-grid"></div>
+</section>
+
+
+
+
+<footer><footer>
+  <img src="fig/logo/basira.png" alt="BASIRA Lab" class="footer-logo" />
+  <p>
+    <strong>GNN-CB</strong> · EMNLP 2026 · MIT License
+  </p>
+  <p style="margin-top:4px; font-size:0.8rem; color:var(--ink-3);">Research &amp; educational use only.</p>
+</footer>
+
+<script src="gnncb.js"></script>
+<script>
+  function applyThemeImgs() {
+    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.querySelectorAll('img.theme-img').forEach(function(img) {
+      img.src = dark ? img.dataset.srcDark : img.dataset.srcBright;
+    });
+  }
+  applyThemeImgs();
+  new MutationObserver(function(muts) {
+    muts.forEach(function(m) {
+      if (m.attributeName === 'data-theme') applyThemeImgs();
+    });
+  }).observe(document.documentElement, { attributes: true });
+</script>
+</body>
+</html>
