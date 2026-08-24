@@ -7583,7 +7583,7 @@ const AUTHORS = [
     email: "sargam_g@mfs.iitr.ac.in", affiliation: "Indian Institute of Technology Roorkee", country: "India" },
   { name: "Muhammad Ibrahim Isah",        url: "https://openreview.net/profile?id=~Muhammad_Ibrahim_Isah1",        image: "fig/authors/Muhammad_Ibrahim.jpg",
     email: "mii1900425.swe@buk.edu.ng", affiliation: "Shobhit Institute of Engineering and Technology", country: "India" },
-  { name: "Mohammad Idrees Bhat",         url: "https://openreview.net/profile?id=~Mohammad_Idrees_Bhat1",         image: "fig/authors/Mohammad_Idrees_Bhat.png",
+  { name: "Mohammad Idrees Bhat",         url: "https://openreview.net/profile?id=~Mohammad_Idrees_Bhat1",         image: "fig/authors/Mohammad_Idrees_Bhat.PNG",
     email: "idrees11@yahoo.com", affiliation: "School of Computer Science and Engineering, Dr. Vishwanath Karad MIT World Peace University, Pune, India", country: "India" },
   { name: "Samuel Kangoni Matia",         url: "https://openreview.net/profile?id=~Samuel_Kangoni_Matia1",         image: "fig/authors/Samuel%20Matia.jpeg",
     email: "ssamat0020@gmail.com", affiliation: "Department of Electrical and Computer Engineering, University of Kinshasa", country: "DR Congo" },
