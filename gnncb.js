@@ -7330,14 +7330,11 @@ window.filterLB = filterLB;
 window.sortLB = sortLB;
 
 function filterTasks() {
-  const compSearchEl = document.getElementById('comp-search');
-if (compSearchEl) {
-  compSearchEl.addEventListener('input', filterTasks);
-  document.getElementById('comp-diff').addEventListener('change', filterTasks);
-  document.getElementById('comp-cat').addEventListener('change', filterTasks);
-  document.getElementById('comp-task').addEventListener('change', filterTasks);
-  renderTasks(COMPETITIONS);
-}
+  const q    = (document.getElementById('comp-search')?.value || '').toLowerCase().trim();
+  const diff = document.getElementById('comp-diff').value;
+  const cat  = document.getElementById('comp-cat').value;
+  const task = document.getElementById('comp-task').value;
+
   document.querySelectorAll('.task-card').forEach(el => {
     const ok =
       el.dataset.name.includes(q) &&
