@@ -7573,7 +7573,7 @@ const AUTHORS = [
     email: "rypaccotacya@ucsp.edu.pe", affiliation: "Department of Computing, Universidad Católica San Pablo, Arequipa, Perú", country: "Peru" },
   { name: "Ignatius Balayo",              url: "https://openreview.net/profile?id=~Ignatius_Balayo1",              image: "fig/authors/IgnatiusBalayo_1.jpeg",
     email: "ibalayo244544@busitema.ac.ug", affiliation: "Faculty of Engineering and Technology, AI and Interdisciplinary Research Group, Busitema University", country: "Uganda" },
-  { name: "Ikram Elhouiti",               url: "https://openreview.net/profile?id=~Ikram_Elhouiti1",               image: "fig/authors/Ikram_Elhouiti.png",
+  { name: "Ikram Elhouiti",               url: "https://openreview.net/profile?id=~Ikram_Elhouiti1",               image: "fig/authors/Ikram_Elhouiti.PNG",
     email: "ik.elhouiti@gmail.com", affiliation: "University of Laghouat, Algeria", country: "Algeria" },
   { name: "Hadil Affes",                  url: "https://openreview.net/profile?id=~Hadil_Affes3",                  image: "fig/authors/hadil%20Affes.png",
     email: "affeshadil1@gmail.com", affiliation: "Higher Institute of Computer Science (ISI), University of Tunis El Manar, Tunisia", country: "Tunisia" },
@@ -7589,7 +7589,7 @@ const AUTHORS = [
     email: "ssamat0020@gmail.com", affiliation: "Department of Electrical and Computer Engineering, University of Kinshasa", country: "DR Congo" },
   { name: "Peguy Kem-Meka Tiotsop Kadzue",url: "https://openreview.net/profile?id=~Peguy_Kem-Meka_Tiotsop_Kadzue1",image: "fig/authors/Peguy%20Kem-Meka%20Tiotsop%20Kadzue.png",
     email: "2788627@students.wits.ac.za", affiliation: "University of Bertoua | Wits University | AIMS RIC", country: "Cameroon / South Africa / Rwanda" },
-  { name: "Maha Trabelsi",                url: "https://openreview.net/profile?id=~Maha_Trabelsi2",                image: "fig/authors/Maha_trabelsi.png",
+  { name: "Maha Trabelsi",                url: "https://openreview.net/profile?id=~Maha_Trabelsi2",                image: "fig/authors/Maha_trabelsi.PNG",
     email: "maha.trabelsi@etudiant-isi.utm.tn", affiliation: "Higher Institute of Computer Science (ISI), University of Tunis El Manar, Tunisia", country: "Tunisia" },
   { name: "Emmanuel Owusu",               url: "https://openreview.net/profile?id=~Emmanuel_Owusu2",               image: "fig/authors/Emmanuel_Owusu.jpeg",
     email: "eowusu396@st.knust.edu.gh", affiliation: "Kwame Nkrumah University of Science and Technology", country: "Ghana" },
@@ -7597,7 +7597,7 @@ const AUTHORS = [
     email: "vineet10338@gmail.com", affiliation: "Netaji Subhas University of Technology, Delhi", country: "India" },
   { name: "Nour Majdoub",                 url: "https://openreview.net/profile?id=~Nour_Majdoub1",                 image: "fig/authors/Nour_Majdoub.jpg",
     email: "nourelhoudamajdoub1@gmail.com", affiliation: "Higher Institute of Informatics and Mathematics of Monastir (ISIMM), Tunisia", country: "Tunisia" },
-  { name: "Tamiru Alemnew",               url: "https://openreview.net/profile?id=~Tamiru_Alemnew1",               image: "fig/authors/Tamiru.JPG",
+  { name: "Tamiru Alemnew",               url: "https://openreview.net/profile?id=~Tamiru_Alemnew1",               image: "fig/authors/Tamiru.jpg",
     email: "tamiru.almnew-ug@aau.edu.et", affiliation: "Addis Ababa University", country: "Ethiopia" }
 ];
 const AVATAR_PALETTE = ['#2ea043','#1f6feb','#a371f7','#db6d28','#3fb950','#d29922','#f778ba','#58a6ff'];
