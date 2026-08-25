@@ -7672,8 +7672,10 @@ const REFLECTIONS = [
   { name: "Tamiru Alemnew",        github: "https://github.com/Tamiru-Alemnew", image: "fig/authors/Tamiru.jpg",
     text: "G4RS was more than learning GNNs. It gave me my first real taste of research, from exploring ideas and running experiments to collaborating with people from different backgrounds." },
   { name: "Rosa Paccotacya-Yanque",github: "https://github.com/RosePY", image: "fig/authors/Rosa.jpeg",
-    text: "Because of the time difference, G4RS meant joining sessions at around 2 a.m. every Sunday, and it was worth staying up for every time. I always learned something new, and I was always looking forward to the next Sunday✨." }
-];
+    text: "Because of the time difference, G4RS meant joining sessions at around 2 a.m. every Sunday, and it was worth staying up for every time. I always learned something new, and I was always looking forward to the next Sunday✨." },
+  { name: "Emmanuel Owusu",        github: "https://github.com/Emmanuel-Owusu", image: "fig/authors/Emmanuel%20Owusu.jpeg",
+    text: "G4RS has broadened my horizons in AI and ML as a whole. What I really loved was the challenge of building something and being a participant. I also struggled to extract meaningful information from mathematically intensive academic papers, but the structured questions provided by Prof. Islem really helped me and have stayed with me to this day. The time spent here was truly worth it. Thank you so much Prof. Islem and your whole team in BASIRA Lab." }
+];];
 
 function reflectionSide(name, i) {
   let h = 0;
