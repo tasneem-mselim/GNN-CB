@@ -7650,7 +7650,7 @@ const REFLECTIONS = [
   { name: "Mubaraq Onipede",       github: "https://github.com/Mubarraqqq", image: "fig/authors/Mubaraq%20Onipede.jpeg",
     text: "It was September 2025 when I filed my application to be mentored by Dr Islem Rekik. From the maths behind message passing to an accepted conference paper, and now a possibility to contribute on a greater global stage, the sky is just the stepping stone." },
   { name: "Ikram Elhouiti",        github: "https://github.com/El-Ikram", image: "fig/authors/Ikram_Elhouiti_2.jpg",
-    text: "G4RS has been an incredible experience! Far beyond learning GNNs, it showed me that the real beauty of learning lies in the people you meet, the ideas you share, and the challenges you overcome together."" },  { name: "Ignatius Balayo",       github: "https://github.com/ignatiusbalayo", image: "fig/authors/IgnatiusBalayo_1.jpeg",
+    text: "G4RS has been an incredible experience! Far beyond learning GNNs, it showed me that the real beauty of learning lies in the people you meet, the ideas you share, and the challenges you overcome together." },  { name: "Ignatius Balayo",       github: "https://github.com/ignatiusbalayo", image: "fig/authors/IgnatiusBalayo_1.jpeg",
     text: "I learned that there are levels to things in this world🌍. G4RS started as a playing field for rising stars, but we ended up becoming real researchers, conducting experiments across continents while working towards a common goal." },
   { name: "Abderrahmane Kasmi",    github: "https://github.com/abdksm", image: "fig/authors/Abderrahmane%20Kasmi.jpg",
     text: "G4RS was a great success, thanks to the excellent mentor and the ambitious participants. I learned a lot from everyone involved." },
