@@ -7558,7 +7558,7 @@ const AUTHORS = [
     email: "tugakariem@gmail.com", affiliation: "Ankara Yıldırım Beyazıt University", country: "Turkey" },
   { name: "Abderrahmane Kasmi",           url: "https://openreview.net/profile?id=~Abderrahmane_Kasmi1",           image: "fig/authors/Abderrahmane%20Kasmi.jpg",
     email: "ja_kasmi@esi.dz", affiliation: "National Higher School of Computer Science, Algiers", country: "Algeria" },
-  { name: "Ikram Aissiou",               url: "https://openreview.net/profile?id=~Ikram_Aissiou1",               image: "Aissiou_Ikram.png",
+  { name: "Ikram Aissiou",               url: "https://openreview.net/profile?id=~Ikram_Aissiou1",               image: "fig/authors/Aissiou_Ikram.png",
     email: "aissiouikram47@gmail.com", affiliation: "University of Algiers 1 Ben youcef Benkhadda", country: "Algeria" },
   { name: "Mubaraq Onipede",              url: "https://openreview.net/profile?id=~Mubaraq_Onipede1",              image: "fig/authors/Mubaraq%20Onipede.jpeg",
     email: "mubaraqgbolahan014@gmail.com", affiliation: "York St John University, London", country: "UK" },
