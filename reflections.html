@@ -130,18 +130,62 @@
 
 <script src="gnncb.js"></script>
 <script>
-  function applyThemeImgs() {
-    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
-    document.querySelectorAll('img.theme-img').forEach(function(img) {
-      img.src = dark ? img.dataset.srcDark : img.dataset.srcBright;
-    });
-  }
-  applyThemeImgs();
+    applyThemeImgs();
   new MutationObserver(function(muts) {
     muts.forEach(function(m) {
       if (m.attributeName === 'data-theme') applyThemeImgs();
     });
   }).observe(document.documentElement, { attributes: true });
+</script>
+
+<script>
+  (function () {
+    var total = 15;
+    var base = 'fig/Eyes/';           // <-- update this path if your 15 images live elsewhere
+    var track = document.getElementById('eyes-track');
+    var lightbox = document.getElementById('eyes-lightbox');
+    var lightboxImg = document.getElementById('eyes-lightbox-img');
+    var current = 0;
+    if (!track) return;
+
+    for (var i = 1; i <= total; i++) {
+      (function (n) {
+        var img = document.createElement('img');
+        img.src = base + n + '.png';
+        img.alt = 'Journey moment ' + n;
+        img.loading = 'lazy';
+        img.className = 'eyes-thumb';
+        img.addEventListener('click', function () { openLightbox(n - 1); });
+        track.appendChild(img);
+      })(i);
+    }
+
+    function openLightbox(index) {
+      current = index;
+      lightboxImg.src = base + (current + 1) + '.png';
+      lightbox.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      lightbox.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+    function showRelative(delta) {
+      current = (current + delta + total) % total;
+      lightboxImg.src = base + (current + 1) + '.png';
+    }
+
+    document.getElementById('eyes-lightbox-close').addEventListener('click', closeLightbox);
+    document.getElementById('eyes-lightbox-prev').addEventListener('click', function () { showRelative(-1); });
+    document.getElementById('eyes-lightbox-next').addEventListener('click', function () { showRelative(1); });
+    lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', function (e) {
+      if (!lightbox.classList.contains('is-open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showRelative(-1);
+      if (e.key === 'ArrowRight') showRelative(1);
+    });
+  })();
 </script>
 </body>
 </html>
