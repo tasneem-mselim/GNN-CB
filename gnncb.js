@@ -7559,7 +7559,7 @@ const AUTHORS = [
   { name: "Abderrahmane Kasmi",           url: "https://openreview.net/profile?id=~Abderrahmane_Kasmi1",           image: "fig/authors/Abderrahmane%20Kasmi.jpg",
     email: "ja_kasmi@esi.dz", affiliation: "National Higher School of Computer Science, Algiers", country: "Algeria" },
   { name: "Ikram Aissiou",               url: "https://openreview.net/profile?id=~Ikram_Aissiou1",               image: "Aissiou_Ikram.png",
-    email: "ik.elhouiti@gmail.com", affiliation: "University of Laghouat, Algeria", country: "Algeria" },
+    email: "aissiouikram47@gmail.com", affiliation: "University of Algiers 1 Ben youcef Benkhadda", country: "Algeria" },
   { name: "Mubaraq Onipede",              url: "https://openreview.net/profile?id=~Mubaraq_Onipede1",              image: "fig/authors/Mubaraq%20Onipede.jpeg",
     email: "mubaraqgbolahan014@gmail.com", affiliation: "York St John University, London", country: "UK" },
   { name: "Faran Taimoor Butt",           url: "https://openreview.net/profile?id=~Faran_Taimoor_Butt4",           image: "fig/authors/Faran%20Taimoor%20Butt.jpg",
