@@ -130,7 +130,15 @@
 
 <script src="gnncb.js"></script>
 <script>
-    applyThemeImgs();
+    <script src="gnncb.js"></script>
+<script>
+  function applyThemeImgs() {
+    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.querySelectorAll('img.theme-img').forEach(function(img) {
+      img.src = dark ? img.dataset.srcDark : img.dataset.srcBright;
+    });
+  }
+  applyThemeImgs();
   new MutationObserver(function(muts) {
     muts.forEach(function(m) {
       if (m.attributeName === 'data-theme') applyThemeImgs();
