@@ -7544,7 +7544,7 @@ sections.forEach(id => {
 });
 
 /* ──────────── Author roster (avatars + OpenReview links) ───────────── */
-const LEAD_AUTHOR = { name: "Islem Rekik", url: "https://openreview.net/profile?id=~Islem_Rekik1", image: "fig/authors/rekik.jpg",
+const LEAD_AUTHOR = { name: "Islem Rekik", url: "https://basira-lab.com/", image: "fig/authors/rekik.jpg",
   email: "islem.rekik@gmail.com", affiliation: "Imperial College London", country: "UK" };
 
 const AUTHORS = [
