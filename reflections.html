@@ -147,9 +147,15 @@
 </script>
 
 <script>
-  (function () {
-    var total = 15;
-    var base = 'fig/testimony/';           // <-- update this path if your 15 images live elsewhere
+    (function () {
+    var total = 16;
+    var base = 'fig/testimony/';           // <-- update this path if your 16 images live elsewhere
+
+    // images 15 and 16 use uppercase .PNG, the rest use lowercase .png
+    function extFor(n) {
+      return (n === 15 || n === 16) ? '.PNG' : '.png';
+    }
+
     var track = document.getElementById('eyes-track');
     var lightbox = document.getElementById('eyes-lightbox');
     var lightboxImg = document.getElementById('eyes-lightbox-img');
@@ -159,7 +165,7 @@
     for (var i = 1; i <= total; i++) {
       (function (n) {
         var img = document.createElement('img');
-        img.src = base + n + '.png';
+        img.src = base + n + extFor(n);
         img.alt = 'Journey moment ' + n;
         img.loading = 'lazy';
         img.className = 'eyes-thumb';
@@ -170,7 +176,7 @@
 
     function openLightbox(index) {
       current = index;
-      lightboxImg.src = base + (current + 1) + '.png';
+      lightboxImg.src = base + (current + 1) + extFor(current + 1);
       lightbox.classList.add('is-open');
       document.body.style.overflow = 'hidden';
     }
@@ -180,9 +186,9 @@
     }
     function showRelative(delta) {
       current = (current + delta + total) % total;
-      lightboxImg.src = base + (current + 1) + '.png';
+      lightboxImg.src = base + (current + 1) + extFor(current + 1);
     }
-
+      
     document.getElementById('eyes-lightbox-close').addEventListener('click', closeLightbox);
     document.getElementById('eyes-lightbox-prev').addEventListener('click', function () { showRelative(-1); });
     document.getElementById('eyes-lightbox-next').addEventListener('click', function () { showRelative(1); });
