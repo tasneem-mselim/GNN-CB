@@ -96,8 +96,26 @@
   <div class="reflections-grid" id="reflections-grid"></div>
 </section>
 
+<hr class="section-divider" />
+
+<section class="section" id="through-their-eyes">
+  <p class="journey-caption">The Journey, Through Their Eyes</p>
+  <div class="eyes-carousel">
+    <button class="eyes-nav eyes-nav-prev" aria-label="Scroll left" onclick="document.getElementById('eyes-track').scrollBy({left:-320,behavior:'smooth'})">&#10094;</button>
+    <div class="eyes-track" id="eyes-track"></div>
+    <button class="eyes-nav eyes-nav-next" aria-label="Scroll right" onclick="document.getElementById('eyes-track').scrollBy({left:320,behavior:'smooth'})">&#10095;</button>
+  </div>
+</section>
+
+<div class="eyes-lightbox" id="eyes-lightbox">
+  <button class="eyes-lightbox-close" id="eyes-lightbox-close" aria-label="Close">&times;</button>
+  <button class="eyes-lightbox-arrow eyes-lightbox-prev" id="eyes-lightbox-prev" aria-label="Previous">&#10094;</button>
+  <img class="eyes-lightbox-img" id="eyes-lightbox-img" src="" alt="" />
+  <button class="eyes-lightbox-arrow eyes-lightbox-next" id="eyes-lightbox-next" aria-label="Next">&#10095;</button>
+</div>
 
 
+  
 
 <footer>
   <img src="fig/logo/BASIRA-DARK.png"
