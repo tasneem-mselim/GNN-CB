@@ -7576,7 +7576,7 @@ const AUTHORS = [
     email: "affeshadil1@gmail.com", affiliation: "Higher Institute of Computer Science (ISI), University of Tunis El Manar, Tunisia", country: "Tunisia" },
   { name: "Bijay Adhikari",               url: "https://openreview.net/profile?id=~Bijay_Adhikari1",               image: "fig/authors/Bijay%20Adhikari.jpg",
     email: "bjayadikari.ba@gmail.com", affiliation: "Institute of Science and Technology, Tribhuvan University", country: "Nepal" },
-  { name: "Sargam Goyal",                 url: "https://openreview.net/profile?id=~Sargam_Goyal1",                 image: "fig/authors/Sargam%20Goyal.jpg",
+  { name: "Sargam Goyal",                 url: "https://openreview.net/profile?id=~Sargam_Goyal1",                 image: "fig/authors/Sargam%20Goyal.jpeg",
     email: "sargam_g@mfs.iitr.ac.in", affiliation: "Indian Institute of Technology Roorkee", country: "India" },
   { name: "Muhammad Ibrahim Isah",        url: "https://openreview.net/profile?id=~Muhammad_Ibrahim_Isah1",        image: "fig/authors/Muhammad_ibrahim.PNG",
     email: "mii1900425.swe@buk.edu.ng", affiliation: "Shobhit Institute of Engineering and Technology", country: "India" },
