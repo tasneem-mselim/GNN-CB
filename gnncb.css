@@ -852,3 +852,20 @@
         .author-meta .author-affil { display: block; }
         .author-meta .author-country { display: block; font-weight: 600; }
 
+        /* --- Through Their Eyes: horizontal photo carousel + lightbox --- */
+        .eyes-carousel { position: relative; max-width: 90%; margin: 1.5rem auto 0; display: flex; align-items: center; gap: 8px; }
+        .eyes-track { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 10px 4px; flex: 1; }
+        .eyes-track::-webkit-scrollbar { height: 8px; }
+        .eyes-track::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .eyes-thumb { height: 220px; width: auto; flex-shrink: 0; border-radius: var(--r-md, 10px); border: 1px solid var(--border); scroll-snap-align: start; cursor: pointer; object-fit: cover; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .eyes-thumb:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+        .eyes-nav { flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface, #1a1a1a); color: var(--ink-1, #eee); font-size: 1rem; cursor: pointer; }
+        .eyes-nav:hover { background: var(--border); }
+        .eyes-lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.2s ease; z-index: 1000; }
+        .eyes-lightbox.is-open { opacity: 1; visibility: visible; }
+        .eyes-lightbox-img { max-width: 88vw; max-height: 88vh; border-radius: var(--r-md, 10px); box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+        .eyes-lightbox-close { position: absolute; top: 20px; right: 28px; font-size: 2.2rem; line-height: 1; background: none; border: none; color: #fff; cursor: pointer; }
+        .eyes-lightbox-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); color: #fff; font-size: 1.3rem; cursor: pointer; }
+        .eyes-lightbox-prev { left: 24px; }
+        .eyes-lightbox-next { right: 24px; }
+        
